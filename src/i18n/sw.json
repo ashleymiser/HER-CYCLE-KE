@@ -1,0 +1,33 @@
+{
+  "languageSelect": {
+    "eyebrow": "HerCycle Kenya",
+    "title": "Chagua lugha yako",
+    "subtitle": "Unaweza kubadilisha wakati wowote juu ya skrini.",
+    "english": "Kiingereza",
+    "swahili": "Kiswahili",
+    "continue": "Endelea"
+  },
+  "nav": {
+    "back": "Rudi",
+    "next": "Endelea",
+    "start": "Anza tathmini"
+  },
+  "home": {
+    "eyebrow": "Tathmini ya Hatari ya PCOS",
+    "title": "Elewa mzunguko wako. Jiandae kwa daktari wako.",
+    "body": "Jibu maswali machache kuhusu mzunguko wako, dalili, na historia ya afya. Tutakokotoa alama yako binafsi ya hatari ya PCOS na kutengeneza muhtasari wa kumpelekea daktari wako wa uzazi.",
+    "disclaimer": "Chombo hiki hakitambui PCOS. Ni hatua ya kwanza ya mazungumzo na daktari wako.",
+    "cta": "Anza tathmini"
+  },
+  "assessment": {
+    "eyebrow": "Tathmini",
+    "step": "Hatua {{current}} kati ya {{total}}",
+    "placeholderTitle": "Hatua hii inaandaliwa",
+    "placeholderBody": "Mtiririko kamili wa tathmini (historia ya mzunguko, dalili, historia ya kimetaboliki) unakuja katika toleo lijalo."
+  },
+  "results": {
+    "eyebrow": "Matokeo",
+    "placeholderTitle": "Muhtasari wako utaonekana hapa",
+    "placeholderBody": "Baada ya tathmini kukamilika, alama yako ya hatari na muhtasari unaoweza kupakuliwa kwa daktari utaonekana kwenye skrini hii."
+  }
+}

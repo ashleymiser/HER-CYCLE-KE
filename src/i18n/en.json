@@ -1,0 +1,33 @@
+{
+  "languageSelect": {
+    "eyebrow": "HerCycle Kenya",
+    "title": "Choose your language",
+    "subtitle": "You can switch anytime from the top of the screen.",
+    "english": "English",
+    "swahili": "Kiswahili",
+    "continue": "Continue"
+  },
+  "nav": {
+    "back": "Back",
+    "next": "Next",
+    "start": "Start assessment"
+  },
+  "home": {
+    "eyebrow": "PCOS Risk Assessment",
+    "title": "Understand your cycle. Prepare for your doctor.",
+    "body": "Answer a few questions about your cycle, symptoms, and health history. We'll calculate a personalised PCOS risk score and generate a summary you can bring to your gynaecologist.",
+    "disclaimer": "This tool does not diagnose PCOS. It's a starting point for a conversation with your doctor.",
+    "cta": "Begin assessment"
+  },
+  "assessment": {
+    "eyebrow": "Assessment",
+    "step": "Step {{current}} of {{total}}",
+    "placeholderTitle": "This step is being built",
+    "placeholderBody": "The full assessment flow (cycle history, symptoms, metabolic history) is coming in the next build."
+  },
+  "results": {
+    "eyebrow": "Results",
+    "placeholderTitle": "Your summary will appear here",
+    "placeholderBody": "Once the assessment is complete, your risk score and downloadable doctor-ready summary will show on this screen."
+  }
+}
