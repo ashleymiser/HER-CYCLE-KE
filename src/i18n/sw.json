@@ -1,4 +1,8 @@
 {
+  "common": {
+    "yes": "Ndiyo",
+    "no": "Hapana"
+  },
   "languageSelect": {
     "eyebrow": "HerCycle Kenya",
     "title": "Chagua lugha yako",
@@ -10,7 +14,8 @@
   "nav": {
     "back": "Rudi",
     "next": "Endelea",
-    "start": "Anza tathmini"
+    "start": "Anza tathmini",
+    "seeResult": "Ona matokeo"
   },
   "home": {
     "eyebrow": "Tathmini ya Hatari ya PCOS",
@@ -20,14 +25,115 @@
     "cta": "Anza tathmini"
   },
   "assessment": {
-    "eyebrow": "Tathmini",
-    "step": "Hatua {{current}} kati ya {{total}}",
-    "placeholderTitle": "Hatua hii inaandaliwa",
-    "placeholderBody": "Mtiririko kamili wa tathmini (historia ya mzunguko, dalili, historia ya kimetaboliki) unakuja katika toleo lijalo."
+    "intro": {
+      "eyebrow": "Toleo la majaribio \u00b7 kwa upimaji wa ndani tu",
+      "title": "Dodoso la Uchunguzi la HerCycle",
+      "body": "Maswali machache kuhusu mzunguko wako na dalili zozote ulizoona. Hii inachukua takribani dakika 3 na haitambui PCOS \u2014 inakadiria uwezekano, kulingana na vigezo vya Rotterdam, na kutengeneza muhtasari unaoweza kumpelekea daktari.",
+      "cta": "Anza"
+    },
+    "progress": "Hatua {{current}} kati ya {{total}}",
+    "sections": {
+      "1": { "label": "Sehemu A \u00b7 Historia ya Mzunguko" },
+      "2": { "label": "Sehemu B \u00b7 Dalili za Homoni za Kiume Kupita Kiasi" },
+      "3": { "label": "Sehemu C \u00b7 Vihatarishi Vingine" },
+      "4": { "label": "Sehemu D \u00b7 Muktadha" }
+    },
+    "questions": {
+      "menarcheYears": {
+        "title": "Ni muda gani tangu hedhi yako ya kwanza?",
+        "options": {
+          "<1": "Chini ya mwaka 1 uliopita",
+          "1-3": "Miaka 1\u20133 iliyopita",
+          ">3": "Zaidi ya miaka 3 iliyopita"
+        }
+      },
+      "cycleLength": {
+        "title": "Kwa wastani, ni siku ngapi kati ya mwanzo wa hedhi moja na inayofuata?",
+        "options": {
+          "<21": "Chini ya siku 21",
+          "21-35": "Siku 21\u201335",
+          "36-45": "Siku 36\u201345",
+          ">45": "Zaidi ya siku 45",
+          "varies": "Inabadilika sana"
+        }
+      },
+      "periodsLast12": {
+        "title": "Umepata hedhi ngapi katika miezi 12 iliyopita?",
+        "options": {
+          "8+": "8 au zaidi",
+          "4-7": "4\u20137",
+          "1-3": "1\u20133",
+          "none": "Hakuna"
+        }
+      },
+      "gone3mo": {
+        "title": "Je, umewahi kukosa hedhi kwa miezi 3+ mfululizo, na una uhakika hujashika mimba?"
+      },
+      "acne": {
+        "title": "Chunusi ambazo hazijaisha kwa matunzo ya kawaida ya ngozi (taya, kidevu, kifua, au mgongo)?",
+        "options": {
+          "none": "Hakuna",
+          "mild": "Kidogo",
+          "moderate": "Wastani",
+          "severe": "Kali"
+        }
+      },
+      "excessHair": {
+        "title": "Ukuaji wa nywele usoni, kifuani, au tumboni unaokuonekana zaidi ya kawaida ya familia yako?",
+        "help": "Mifumo ya kawaida ya ukuaji wa nywele hutofautiana sana kulingana na asili \u2014 linganisha na familia yako mwenyewe, si kigezo cha jumla."
+      },
+      "scalpThin": {
+        "title": "Je, kuna kupungua kwa nywele au upara unaoanza kwenye kichwa?"
+      },
+      "priorHormone": {
+        "title": "Je, daktari amewahi kupima viwango vya homoni zako (kama testosterone)?",
+        "options": {
+          "none": "Sijawahi kupimwa",
+          "normal": "Nilipimwa, nikaambiwa ni kawaida",
+          "high": "Nilipimwa, nikaambiwa ni juu"
+        }
+      },
+      "weightChange": {
+        "title": "Mabadiliko makubwa ya uzito mwaka jana usioweza kuyaeleza?"
+      },
+      "skinPatches": {
+        "title": "Madoa meusi, laini kama velvet kwenye shingo, kwapa, au njia ya uzazi?"
+      },
+      "familyHistory": {
+        "title": "Je, mama yako, dada, au shangazi ana PCOS, kisukari aina ya 2, au hedhi zisizo za kawaida?"
+      },
+      "toldPCO": {
+        "title": "Je, daktari amewahi kukuambia, kupitia ultrasound, kuwa una ovari zenye vivimbe vingi (polycystic ovaries)?"
+      },
+      "onMedication": {
+        "title": "Je, kwa sasa unatumia dawa yoyote ya homoni (kama vidonge vya uzazi wa mpango)?",
+        "help": "Hii inaathiri jinsi majibu yako mengine yalivyo ya kuaminika, kwani dawa za homoni hubadilisha mzunguko na ngozi."
+      }
+    }
   },
   "results": {
-    "eyebrow": "Matokeo",
-    "placeholderTitle": "Muhtasari wako utaonekana hapa",
-    "placeholderBody": "Baada ya tathmini kukamilika, alama yako ya hatari na muhtasari unaoweza kupakuliwa kwa daktari utaonekana kwenye skrini hii."
+    "eyebrow": "Matokeo (toleo la majaribio)",
+    "tier": {
+      "high": "Uwezekano wa juu zaidi \u2014 inafaa kumtembelea daktari",
+      "moderate": "Kuna dalili fulani \u2014 inafaa kufuatilia",
+      "low": "Hakuna dalili kubwa kwa sasa"
+    },
+    "criteriaFlagged": "Vigezo {{count}} kati ya 3 vya Rotterdam vimebainika",
+    "medicationCaveat": "Unatumia dawa za homoni, hivyo matokeo haya yanaweza kuwa hayana uhakika kamili \u2014 mtajie daktari jambo hili.",
+    "criteria": {
+      "c1": "Kigezo cha 1 \u2014 Mzunguko usio wa kawaida",
+      "c2": "Kigezo cha 2 \u2014 Dalili za homoni za kiume kupita kiasi",
+      "c3": "Kigezo cha 3 \u2014 Uthibitisho wa ovari zenye vivimbe vingi"
+    },
+    "startOver": "Anza upya",
+    "disclaimer": "Toleo la majaribio kwa upimaji wa ndani tu \u2014 si chombo cha utambuzi.",
+    "downloadPdf": "Pakua PDF",
+    "preparingPdf": "Inatayarisha\u2026",
+    "print": "Chapisha",
+    "pdf": {
+      "criteriaHeading": "Vigezo vya Rotterdam",
+      "responsesHeading": "Majibu ya Tathmini",
+      "disclaimerNote": "Kumbuka: Kigezo cha 3 (ovari zenye vivimbe vingi) kinategemea utambuzi wa awali wa kliniki ulioripotiwa na mgonjwa, si matokeo huru ya ultrasound. Hii ni makadirio ya uchunguzi, si utambuzi."
+    }
   }
 }

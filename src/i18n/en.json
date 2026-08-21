@@ -1,4 +1,8 @@
 {
+  "common": {
+    "yes": "Yes",
+    "no": "No"
+  },
   "languageSelect": {
     "eyebrow": "HerCycle Kenya",
     "title": "Choose your language",
@@ -10,7 +14,8 @@
   "nav": {
     "back": "Back",
     "next": "Next",
-    "start": "Start assessment"
+    "start": "Start assessment",
+    "seeResult": "See result"
   },
   "home": {
     "eyebrow": "PCOS Risk Assessment",
@@ -20,14 +25,115 @@
     "cta": "Begin assessment"
   },
   "assessment": {
-    "eyebrow": "Assessment",
-    "step": "Step {{current}} of {{total}}",
-    "placeholderTitle": "This step is being built",
-    "placeholderBody": "The full assessment flow (cycle history, symptoms, metabolic history) is coming in the next build."
+    "intro": {
+      "eyebrow": "Prototype \u00b7 internal testing only",
+      "title": "HerCycle Screening Questionnaire",
+      "body": "A few questions about your cycle and any symptoms you've noticed. This takes about 3 minutes and does not diagnose PCOS \u2014 it estimates likelihood, based on the Rotterdam criteria, and prepares a summary you can bring to a clinician.",
+      "cta": "Start"
+    },
+    "progress": "Step {{current}} of {{total}}",
+    "sections": {
+      "1": { "label": "Section A \u00b7 Cycle History" },
+      "2": { "label": "Section B \u00b7 Signs of High Androgen" },
+      "3": { "label": "Section C \u00b7 Other Risk Factors" },
+      "4": { "label": "Section D \u00b7 Context" }
+    },
+    "questions": {
+      "menarcheYears": {
+        "title": "How long ago was your first period?",
+        "options": {
+          "<1": "Less than 1 year ago",
+          "1-3": "1\u20133 years ago",
+          ">3": "More than 3 years ago"
+        }
+      },
+      "cycleLength": {
+        "title": "On average, how many days between the start of one period and the next?",
+        "options": {
+          "<21": "Fewer than 21 days",
+          "21-35": "21\u201335 days",
+          "36-45": "36\u201345 days",
+          ">45": "More than 45 days",
+          "varies": "It varies a lot"
+        }
+      },
+      "periodsLast12": {
+        "title": "How many periods have you had in the last 12 months?",
+        "options": {
+          "8+": "8 or more",
+          "4-7": "4\u20137",
+          "1-3": "1\u20133",
+          "none": "None"
+        }
+      },
+      "gone3mo": {
+        "title": "Have you gone 3+ months without a period, and you're sure you're not pregnant?"
+      },
+      "acne": {
+        "title": "Acne that hasn't responded to normal skincare (jaw, chin, chest, or back)?",
+        "options": {
+          "none": "None",
+          "mild": "Mild",
+          "moderate": "Moderate",
+          "severe": "Severe"
+        }
+      },
+      "excessHair": {
+        "title": "Hair growth on your face, chest, or stomach that feels like more than typical for your family?",
+        "help": "Normal hair growth patterns vary a lot by background \u2014 compare to your own family, not a general standard."
+      },
+      "scalpThin": {
+        "title": "Any thinning hair or a receding hairline on your scalp?"
+      },
+      "priorHormone": {
+        "title": "Has a doctor ever tested your hormone levels (like testosterone)?",
+        "options": {
+          "none": "Never tested",
+          "normal": "Tested, told normal",
+          "high": "Tested, told high"
+        }
+      },
+      "weightChange": {
+        "title": "Noticeable weight change in the past year you can't explain?"
+      },
+      "skinPatches": {
+        "title": "Dark, velvety patches of skin on your neck, armpits, or groin?"
+      },
+      "familyHistory": {
+        "title": "Does your mother, sister, or aunt have PCOS, type 2 diabetes, or irregular periods?"
+      },
+      "toldPCO": {
+        "title": "Has a doctor ever told you, from an ultrasound, that you have polycystic ovaries?"
+      },
+      "onMedication": {
+        "title": "Are you currently on any hormonal medication (like birth control)?",
+        "help": "This affects how reliable the rest of your answers are, since hormonal medication changes cycles and skin."
+      }
+    }
   },
   "results": {
-    "eyebrow": "Results",
-    "placeholderTitle": "Your summary will appear here",
-    "placeholderBody": "Once the assessment is complete, your risk score and downloadable doctor-ready summary will show on this screen."
+    "eyebrow": "Result (prototype output)",
+    "tier": {
+      "high": "Higher likelihood \u2014 worth a clinician visit",
+      "moderate": "Some signs \u2014 worth tracking",
+      "low": "No strong signs right now"
+    },
+    "criteriaFlagged": "{{count}} of 3 Rotterdam criteria flagged",
+    "medicationCaveat": "You're on hormonal medication, so these results may be less reliable \u2014 mention this to a clinician.",
+    "criteria": {
+      "c1": "Criterion 1 \u2014 Irregular cycles",
+      "c2": "Criterion 2 \u2014 Signs of high androgen",
+      "c3": "Criterion 3 \u2014 Confirmed polycystic ovaries"
+    },
+    "startOver": "Start over",
+    "disclaimer": "Prototype for internal validation only \u2014 not a diagnostic tool.",
+    "downloadPdf": "Download PDF",
+    "preparingPdf": "Preparing\u2026",
+    "print": "Print",
+    "pdf": {
+      "criteriaHeading": "Rotterdam Criteria",
+      "responsesHeading": "Assessment Responses",
+      "disclaimerNote": "Note: Criterion 3 (polycystic ovaries) relies on prior clinical diagnosis reported by the patient, not an independent ultrasound finding. This is a screening estimate, not a diagnosis."
+    }
   }
 }

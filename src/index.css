@@ -4,6 +4,7 @@
   /* Color tokens */
   --color-plum: #3D2645;
   --color-plum-light: #6B5271;
+  --color-plum-tint: #EAE3EB;
   --color-sand: #F7F1EA;
   --color-sand-dark: #EDE3D6;
   --color-sage: #7A8B69;
@@ -27,4 +28,26 @@ html {
 body {
   background-color: var(--color-sand);
   color: var(--color-plum);
+}
+
+/* Isolates the doctor-ready summary sheet when printing (or "Save as PDF"
+   via the browser's print dialog) so only that content appears, instead of
+   the whole app page. */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .printable,
+  .printable * {
+    visibility: visible;
+  }
+  .printable {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+  .no-print {
+    display: none !important;
+  }
 }
