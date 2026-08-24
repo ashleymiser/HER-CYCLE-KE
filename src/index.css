@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
 @theme {
-  /* Color tokens */
   --color-plum: #3D2645;
   --color-plum-light: #6B5271;
   --color-plum-tint: #EAE3EB;
@@ -15,10 +14,10 @@
   --color-amber-light: #F5EAD4;
   --color-cream: #FCFAF6;
 
-  /* Fonts */
   --font-display: "Fraunces", serif;
   --font-body: "Inter", sans-serif;
   --font-mono: "IBM Plex Mono", monospace;
+  --font-hand: "Caveat", cursive;
 }
 
 html {
@@ -30,9 +29,6 @@ body {
   color: var(--color-plum);
 }
 
-/* Isolates the doctor-ready summary sheet when printing (or "Save as PDF"
-   via the browser's print dialog) so only that content appears, instead of
-   the whole app page. */
 @media print {
   body * {
     visibility: hidden;

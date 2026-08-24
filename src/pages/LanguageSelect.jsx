@@ -12,7 +12,7 @@ export default function LanguageSelect() {
 
   function choose(code) {
     setLanguage(code)
-    navigate('/home')
+    navigate('/landing')
   }
 
   return (

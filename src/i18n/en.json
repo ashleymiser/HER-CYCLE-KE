@@ -135,5 +135,60 @@
       "responsesHeading": "Assessment Responses",
       "disclaimerNote": "Note: Criterion 3 (polycystic ovaries) relies on prior clinical diagnosis reported by the patient, not an independent ultrasound finding. This is a screening estimate, not a diagnosis."
     }
-  }
+  },
+      "landing": {
+  "nav": { "signUp": "Sign up" },
+  "hero": {
+    "tape": "a health notebook",
+    "titleLine1": "Know your cycle.",
+    "titleEm": "Know yourself.",
+    "sub": "Answers about PCOS, a screening you can actually understand, and a way to get help that doesn't cost a fortune — built for teen girls in Kenya.",
+    "ctaPrimary": "Start my notebook",
+    "ctaGhost": "What is PCOS?"
+  },
+  "corkboard": { "heading": "PCOS and HerCycle Kenya" },
+  "pcosCard": {
+    "eyebrow": "what is it?",
+    "title": "PCOS",
+    "body": "Polycystic Ovarian Syndrome is a hormone condition that can affect your periods, skin, and hair growth. It's common and most girls who have it don't know yet.",
+    "statNum": "9.8%",
+    "statLabel": "of teens worldwide meet the criteria for PCOS"
+  },
+  "symptoms": {
+    "periods": "Irregular or missed periods",
+    "acne": "Acne that won't quit",
+    "weight": "Sudden weight changes",
+    "hair": "More hair than usual"
+  },
+  "aboutCard": {
+    "eyebrow": "and us?",
+    "title": "HerCycle Kenya",
+    "body": "We built the resource we wished existed: honest PCOS education, a screening that flags red flags early, and a bridge to care that's actually affordable."
+  },
+  "features": {
+    "learn": "Learn what's normal (and what isn't)",
+    "screen": "Screen your symptoms in minutes",
+    "pharmacy": "Reach discounted partner pharmacies",
+    "guardian": "Bring your guardian along, too"
+  },
+  "quote": "No comparable resource exists for teenage girls and their guardians — until now.",
+  "ctaBand": {
+    "title": "You don't need a diagnosis to start paying attention.",
+    "body": "Three minutes gets you a screening, a summary you can bring to a doctor, and a clearer picture of what's actually going on.",
+    "cta": "Start my notebook"
+  },
+  "footer": "Because we care"
+},
+"signup": {
+  "back": "Back",
+  "eyebrow": "last page, promise",
+  "title": "Save your spot",
+  "sub": "Just enough to keep your results waiting for you.",
+  "nameLabel": "Name",
+  "namePlaceholder": "What should we call you?",
+  "contactLabel": "Contact",
+  "contactPlaceholder": "Phone or email",
+  "submit": "Create my page"
+}
+ 
 }
