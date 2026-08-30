@@ -18,17 +18,17 @@
     "seeResult": "See result"
   },
   "home": {
-    "eyebrow": "PCOS Risk Assessment",
+    "eyebrow": "PMOS Risk Assessment",
     "title": "Understand your cycle. Prepare for your doctor.",
-    "body": "Answer a few questions about your cycle, symptoms, and health history. We'll calculate a personalised PCOS risk score and generate a summary you can bring to your gynaecologist.",
-    "disclaimer": "This tool does not diagnose PCOS. It's a starting point for a conversation with your doctor.",
+    "body": "Answer a few questions about your cycle, symptoms, and health history. We'll calculate a personalised PMOS risk score and generate a summary you can bring to your gynaecologist.",
+    "disclaimer": "This tool does not diagnose PMOS. It's a starting point for a conversation with your doctor.",
     "cta": "Begin assessment"
   },
   "assessment": {
     "intro": {
       "eyebrow": "Prototype \u00b7 internal testing only",
       "title": "HerCycle Screening Questionnaire",
-      "body": "A few questions about your cycle and any symptoms you've noticed. This takes about 3 minutes and does not diagnose PCOS \u2014 it estimates likelihood, based on the Rotterdam criteria, and prepares a summary you can bring to a clinician.",
+      "body": "A few questions about your cycle and any symptoms you've noticed. This takes about 3 minutes and does not diagnose PMOS \u2014 it estimates likelihood, based on the Rotterdam criteria, and prepares a summary you can bring to a clinician.",
       "cta": "Start"
     },
     "progress": "Step {{current}} of {{total}}",
@@ -100,7 +100,7 @@
         "title": "Dark, velvety patches of skin on your neck, armpits, or groin?"
       },
       "familyHistory": {
-        "title": "Does your mother, sister, or aunt have PCOS, type 2 diabetes, or irregular periods?"
+        "title": "Does your mother, sister, or aunt have PMOS, type 2 diabetes, or irregular periods?"
       },
       "toldPCO": {
         "title": "Has a doctor ever told you, from an ultrasound, that you have polycystic ovaries?"
@@ -136,59 +136,59 @@
       "disclaimerNote": "Note: Criterion 3 (polycystic ovaries) relies on prior clinical diagnosis reported by the patient, not an independent ultrasound finding. This is a screening estimate, not a diagnosis."
     }
   },
-      "landing": {
-  "nav": { "signUp": "Sign up" },
-  "hero": {
-    "tape": "a health notebook",
-    "titleLine1": "Know your cycle.",
-    "titleEm": "Know yourself.",
-    "sub": "Answers about PCOS, a screening you can actually understand, and a way to get help that doesn't cost a fortune — built for teen girls in Kenya.",
-    "ctaPrimary": "Start my notebook",
-    "ctaGhost": "What is PCOS?"
+  "landing": {
+    "nav": { "signUp": "Sign up" },
+    "hero": {
+      "tape": "a health notebook",
+      "titleLine1": "Know your cycle.",
+      "titleEm": "Know yourself.",
+      "sub": "Answers about PMOS, a screening you can actually understand, and a way to get help that doesn't cost a fortune — built for teen girls in Kenya.",
+      "ctaPrimary": "Start my notebook",
+      "ctaGhost": "What is PMOS?"
+    },
+    "corkboard": { "heading": "PMOS and HerCycle Kenya" },
+    "pmosCard": {
+      "eyebrow": "what is it?",
+      "title": "PMOS",
+      "body": "Polyendocrine Metabolic Ovarian Syndrome is a hormone and metabolic condition that can affect your periods, skin, and hair growth. It's common and most girls who have it don't know yet.",
+      "statNum": "9.8%",
+      "statLabel": "of teens worldwide meet the criteria for PMOS"
+    },
+    "symptoms": {
+      "periods": "Irregular or missed periods",
+      "acne": "Acne that won't quit",
+      "weight": "Sudden weight changes",
+      "hair": "More hair than usual"
+    },
+    "aboutCard": {
+      "eyebrow": "and us?",
+      "title": "HerCycle Kenya",
+      "body": "We built the resource we wished existed: honest PMOS education, a screening that flags red flags early, and a bridge to care that's actually affordable."
+    },
+    "features": {
+      "learn": "Learn what's normal (and what isn't)",
+      "screen": "Screen your symptoms in minutes",
+      "pharmacy": "Reach discounted partner pharmacies",
+      "guardian": "Bring your guardian along, too"
+    },
+    "quote": "No comparable resource exists for teenage girls and their guardians — until now.",
+    "ctaBand": {
+      "title": "You don't need a diagnosis to start paying attention.",
+      "body": "Three minutes gets you a screening, a summary you can bring to a doctor, and a clearer picture of what's actually going on.",
+      "cta": "Start my notebook"
+    },
+    "footer": "Because we care"
   },
-  "corkboard": { "heading": "PCOS and HerCycle Kenya" },
-  "pcosCard": {
-    "eyebrow": "what is it?",
-    "title": "PCOS",
-    "body": "Polycystic Ovarian Syndrome is a hormone condition that can affect your periods, skin, and hair growth. It's common and most girls who have it don't know yet.",
-    "statNum": "9.8%",
-    "statLabel": "of teens worldwide meet the criteria for PCOS"
-  },
-  "symptoms": {
-    "periods": "Irregular or missed periods",
-    "acne": "Acne that won't quit",
-    "weight": "Sudden weight changes",
-    "hair": "More hair than usual"
-  },
-  "aboutCard": {
-    "eyebrow": "and us?",
-    "title": "HerCycle Kenya",
-    "body": "We built the resource we wished existed: honest PCOS education, a screening that flags red flags early, and a bridge to care that's actually affordable."
-  },
-  "features": {
-    "learn": "Learn what's normal (and what isn't)",
-    "screen": "Screen your symptoms in minutes",
-    "pharmacy": "Reach discounted partner pharmacies",
-    "guardian": "Bring your guardian along, too"
-  },
-  "quote": "No comparable resource exists for teenage girls and their guardians — until now.",
-  "ctaBand": {
-    "title": "You don't need a diagnosis to start paying attention.",
-    "body": "Three minutes gets you a screening, a summary you can bring to a doctor, and a clearer picture of what's actually going on.",
-    "cta": "Start my notebook"
-  },
-  "footer": "Because we care"
-},
-"signup": {
-  "back": "Back",
-  "eyebrow": "last page, promise",
-  "title": "Save your spot",
-  "sub": "Just enough to keep your results waiting for you.",
-  "nameLabel": "Name",
-  "namePlaceholder": "What should we call you?",
-  "contactLabel": "Contact",
-  "contactPlaceholder": "Phone or email",
-  "submit": "Create my page"
-}
- 
+  "signup": {
+    "back": "Back",
+    "eyebrow": "last page, promise",
+    "title": "Save your spot",
+    "sub": "Just enough to keep your results waiting for you.",
+    "nameLabel": "Name",
+    "namePlaceholder": "What should we call you?",
+    "contactLabel": "Contact",
+    "contactPlaceholder": "Phone",
+    "submit": "Create my page",
+    "note": "No spam"
+  }
 }

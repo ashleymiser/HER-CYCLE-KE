@@ -54,13 +54,13 @@ export default function Landing() {
           {/* Tile A: What is PCOS */}
           <div className={`${styles.tornCard} ${styles.tornCardA}`}>
             <div className={`${styles.tape} ${styles.tapeSage}`}></div>
-            <p className={styles.cardEyebrow}>{t('landing.pcosCard.eyebrow')}</p>
-            <h3 className={styles.cardTitle}>{t('landing.pcosCard.title')}</h3>
-            <p className={styles.cardBody}>{t('landing.pcosCard.body')}</p>
+            <p className={styles.cardEyebrow}>{t('landing.pmosCard.eyebrow')}</p>
+            <h3 className={styles.cardTitle}>{t('landing.pmosCard.title')}</h3>
+            <p className={styles.cardBody}>{t('landing.pmosCard.body')}</p>
 
             <div className={styles.statCallout}>
-              <span className={styles.statNum}>{t('landing.pcosCard.statNum')}</span>
-              <span className={styles.statLabel}>{t('landing.pcosCard.statLabel')}</span>
+              <span className={styles.statNum}>{t('landing.pmosCard.statNum')}</span>
+              <span className={styles.statLabel}>{t('landing.pmosCard.statLabel')}</span>
             </div>
 
             <div className={styles.stickyGrid}>

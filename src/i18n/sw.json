@@ -18,17 +18,17 @@
     "seeResult": "Ona matokeo"
   },
   "home": {
-    "eyebrow": "Tathmini ya Hatari ya PCOS",
+    "eyebrow": "Tathmini ya Hatari ya PMOS",
     "title": "Elewa mzunguko wako. Jiandae kwa daktari wako.",
-    "body": "Jibu maswali machache kuhusu mzunguko wako, dalili, na historia ya afya. Tutakokotoa alama yako binafsi ya hatari ya PCOS na kutengeneza muhtasari wa kumpelekea daktari wako wa uzazi.",
-    "disclaimer": "Chombo hiki hakitambui PCOS. Ni hatua ya kwanza ya mazungumzo na daktari wako.",
+    "body": "Jibu maswali machache kuhusu mzunguko wako, dalili, na historia ya afya. Tutakokotoa alama yako binafsi ya hatari ya PMOS na kutengeneza muhtasari wa kumpelekea daktari wako wa uzazi.",
+    "disclaimer": "Chombo hiki hakitambui PMOS. Ni hatua ya kwanza ya mazungumzo na daktari wako.",
     "cta": "Anza tathmini"
   },
   "assessment": {
     "intro": {
       "eyebrow": "Toleo la majaribio \u00b7 kwa upimaji wa ndani tu",
       "title": "Dodoso la Uchunguzi la HerCycle",
-      "body": "Maswali machache kuhusu mzunguko wako na dalili zozote ulizoona. Hii inachukua takribani dakika 3 na haitambui PCOS \u2014 inakadiria uwezekano, kulingana na vigezo vya Rotterdam, na kutengeneza muhtasari unaoweza kumpelekea daktari.",
+      "body": "Maswali machache kuhusu mzunguko wako na dalili zozote ulizoona. Hii inachukua takribani dakika 3 na haitambui PMOS \u2014 inakadiria uwezekano, kulingana na vigezo vya Rotterdam, na kutengeneza muhtasari unaoweza kumpelekea daktari.",
       "cta": "Anza"
     },
     "progress": "Hatua {{current}} kati ya {{total}}",
@@ -100,7 +100,7 @@
         "title": "Madoa meusi, laini kama velvet kwenye shingo, kwapa, au njia ya uzazi?"
       },
       "familyHistory": {
-        "title": "Je, mama yako, dada, au shangazi ana PCOS, kisukari aina ya 2, au hedhi zisizo za kawaida?"
+        "title": "Je, mama yako, dada, au shangazi ana PMOS, kisukari aina ya 2, au hedhi zisizo za kawaida?"
       },
       "toldPCO": {
         "title": "Je, daktari amewahi kukuambia, kupitia ultrasound, kuwa una ovari zenye vivimbe vingi (polycystic ovaries)?"
@@ -136,58 +136,59 @@
       "disclaimerNote": "Kumbuka: Kigezo cha 3 (ovari zenye vivimbe vingi) kinategemea utambuzi wa awali wa kliniki ulioripotiwa na mgonjwa, si matokeo huru ya ultrasound. Hii ni makadirio ya uchunguzi, si utambuzi."
     }
   },
-     "landing": {
-  "nav": { "signUp": "Sign up" },
-  "hero": {
-    "tape": "shajara ya afya",
-    "titleLine1": "Fahamu mzunguko wako.",
-    "titleEm": "Jitambue.",
-    "sub": "Majibu kuhusu PCOS, uchunguzi unaoeleweka kwa urahisi, na njia ya kupata msaada isiyokugharimu sana — iliyotengenezwa kwa ajili ya wasichana matineja nchini Kenya.",
-    "ctaPrimary": "Anza shajara yangu",
-    "ctaGhost": "PCOS ni nini?"
+  "landing": {
+    "nav": { "signUp": "Jisajili" },
+    "hero": {
+      "tape": "shajara ya afya",
+      "titleLine1": "Fahamu mzunguko wako.",
+      "titleEm": "Jitambue.",
+      "sub": "Majibu kuhusu PMOS, uchunguzi unaoeleweka kwa urahisi, na njia ya kupata msaada isiyokugharimu sana — iliyotengenezwa kwa ajili ya wasichana matineja nchini Kenya.",
+      "ctaPrimary": "Anza shajara yangu",
+      "ctaGhost": "PMOS ni nini?"
+    },
+    "corkboard": { "heading": "PMOS na HerCycle Kenya" },
+    "pmosCard": {
+      "eyebrow": "ni nini?",
+      "title": "PMOS",
+      "body": "Polyendocrine Metabolic Ovarian Syndrome ni hali ya homoni na kimetaboliki inayoweza kuathiri hedhi yako, ngozi, na ukuaji wa nywele. Ni jambo la kawaida na wasichana wengi wenye hali hii bado hawajui.",
+      "statNum": "9.8%",
+      "statLabel": "ya matineja duniani wanakidhi vigezo vya PMOS"
+    },
+    "symptoms": {
+      "periods": "Hedhi zisizo za kawaida au kukosa hedhi",
+      "acne": "Chunusi zisizoisha",
+      "weight": "Mabadiliko ya ghafla ya uzito",
+      "hair": "Nywele nyingi kuliko kawaida"
+    },
+    "aboutCard": {
+      "eyebrow": "na sisi?",
+      "title": "HerCycle Kenya",
+      "body": "Tulijenga rasilimali tuliyotamani ingekuwepo: elimu ya kweli kuhusu PMOS, uchunguzi unaobainisha dalili mapema, na njia ya kufikia huduma kwa gharama nafuu."
+    },
+    "features": {
+      "learn": "Jifunze kilicho cha kawaida (na kisicho cha kawaida)",
+      "screen": "Chunguza dalili zako kwa dakika chache",
+      "pharmacy": "Fikia maduka ya dawa washirika yenye punguzo",
+      "guardian": "Mshirikishe mlezi wako pia"
+    },
+    "quote": "Hakuna rasilimali inayofanana na hii kwa wasichana matineja na walezi wao — mpaka sasa.",
+    "ctaBand": {
+      "title": "Hauhitaji utambuzi ili kuanza kuzingatia.",
+      "body": "Dakika tatu zinakupa uchunguzi, muhtasari wa kumpelekea daktari, na picha wazi zaidi ya kinachoendelea.",
+      "cta": "Anza shajara yangu"
+    },
+    "footer": "Kwa sababu tunajali"
   },
-  "corkboard": { "heading": "PCOS na HerCycle Kenya" },
-  "pcosCard": {
-    "eyebrow": "ni nini?",
-    "title": "PCOS",
-    "body": "Polycystic Ovarian Syndrome ni hali ya homoni inayoweza kuathiri hedhi yako, ngozi, na ukuaji wa nywele. Ni jambo la kawaida na wasichana wengi wenye hali hii bado hawajui.",
-    "statNum": "9.8%",
-    "statLabel": "ya matineja duniani wanakidhi vigezo vya PCOS"
-  },
-  "symptoms": {
-    "periods": "Hedhi zisizo za kawaida au kukosa hedhi",
-    "acne": "Chunusi zisizoisha",
-    "weight": "Mabadiliko ya ghafla ya uzito",
-    "hair": "Nywele nyingi kuliko kawaida"
-  },
-  "aboutCard": {
-    "eyebrow": "na sisi?",
-    "title": "HerCycle Kenya",
-    "body": "Tulijenga rasilimali tuliyotamani ingekuwepo: elimu ya kweli kuhusu PCOS, uchunguzi unaobainisha dalili mapema, na njia ya kufikia huduma kwa gharama nafuu."
-  },
-  "features": {
-    "learn": "Jifunze kilicho cha kawaida (na kisicho cha kawaida)",
-    "screen": "Chunguza dalili zako kwa dakika chache",
-    "pharmacy": "Fikia maduka ya dawa washirika yenye punguzo",
-    "guardian": "Mshirikishe mlezi wako pia"
-  },
-  "quote": "Hakuna rasilimali inayofanana na hii kwa wasichana matineja na walezi wao — mpaka sasa.",
-  "ctaBand": {
-    "title": "Hauhitaji utambuzi ili kuanza kuzingatia.",
-    "body": "Dakika tatu zinakupa uchunguzi, muhtasari wa kumpelekea daktari, na picha wazi zaidi ya kinachoendelea.",
-    "cta": "Anza shajara yangu"
-  },
-  "footer": "Kwa sababu tunajali"
-},
-"signup": {
-  "back": "Rudi",
-  "eyebrow": "ukurasa wa mwisho, naahidi",
-  "title": "Hifadhi nafasi yako",
-  "sub": "Kiasi cha kutosha kuhifadhi matokeo yako yakikusubiri.",
-  "nameLabel": "Jina",
-  "namePlaceholder": "Tukuiteje?",
-  "contactLabel": "Mawasiliano",
-  "contactPlaceholder": "Simu au barua pepe",
-  "submit": "Tengeneza ukurasa wangu"
-}
+  "signup": {
+    "back": "Rudi",
+    "eyebrow": "ukurasa wa mwisho, naahidi",
+    "title": "Hifadhi nafasi yako",
+    "sub": "Kiasi cha kutosha kuhifadhi matokeo yako yakikusubiri.",
+    "nameLabel": "Jina",
+    "namePlaceholder": "Tukuiteje?",
+    "contactLabel": "Mawasiliano",
+    "contactPlaceholder": "Simu",
+    "submit": "Tengeneza ukurasa wangu",
+    "note": "Hakuna spam"
+  }
 }
