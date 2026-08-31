@@ -1,242 +1,226 @@
-import { useState } from 'react'
-import { jsPDF } from 'jspdf'
-import { SECTION_FIELDS } from '../utils/scoring'
-import { fieldLabel } from '../utils/fieldConfig'
+import { useState, useEffect, useRef } from 'react'
+import { Printer, Download, Check, Loader2 } from 'lucide-react'
+import { useAuth } from '../context/AuthContext'
+import { api } from '../services/api'
 
-// Doctor-ready summary sheet: shown only when printed (Ctrl/Cmd+P) or
-// downloaded as a PDF — never rendered inline in normal browsing, so it
-// doesn't duplicate the tier/criteria preview already shown on the Results
-// page above it.
-//
-// Pulls all its labels from the app's existing translation system
-// (results.*, assessment.questions.*, common.yes/no) via the `t` function
-// and `fieldLabel` helper, rather than a separate i18n block — so it can
-// never drift out of sync with the on-screen copy.
+export default function SummarySheet({ t, language, answers, score, onDownload }) {
+  const { user } = useAuth()
+  const [downloaded, setDownloaded] = useState(false)
+  const [isPrinting, setIsPrinting] = useState(false)
+  const cachedBlobUrlRef = useRef(null)
+  const printIframeRef = useRef(null)
 
-const PDF_COLORS = {
-  plum: [61, 38, 69],
-  soft: [107, 82, 113],
-  rust: [192, 103, 75],
-  amber: [201, 154, 62],
-  sage: [122, 139, 105],
-  line: [228, 215, 196],
-}
+  const patientName = user?.fullName || 'Patient'
+  const patientPhone = user?.phoneNumber || ''
 
-function tierColor(tier) {
-  if (tier === 'high') return PDF_COLORS.rust
-  if (tier === 'moderate') return PDF_COLORS.amber
-  return PDF_COLORS.sage
-}
+  const tier = score?.tier || 'low'
+  const flagCount = score?.flagCount || 0
+  const medicationCaveat = score?.medicationCaveat || false
 
-// jsPDF's built-in fonts aren't embedded in the PDF — they rely on whatever
-// font the PDF viewer substitutes, and not every viewer maps extended
-// punctuation (em dashes, curly quotes) correctly. Since we can't control
-// what's installed on every doctor's machine, strip these to plain ASCII
-// for anything going into the downloaded PDF specifically (the on-screen /
-// printed version below is unaffected — that's real browser text).
-function sanitizeForPdf(text) {
-  return String(text)
-    .replace(/\u2014/g, ' - ')
-    .replace(/\u2013/g, '-')
-    .replace(/\u00b7/g, ' - ')
-    .replace(/[\u2018\u2019]/g, "'")
-    .replace(/[\u201c\u201d]/g, '"')
-    .replace(/\u2026/g, '...')
-}
+  const tierLabel = t(`results.tier.${tier}`) || `${tier.charAt(0).toUpperCase() + tier.slice(1)} Risk`
+  const activeLang = language === 'sw' ? 'sw' : 'en'
 
-export default function SummarySheet({ t, language, answers, score }) {
-  const [downloading, setDownloading] = useState(false)
-  const { c1, c2, c3, flagCount, tier, medicationCaveat } = score
+  // Pre-fetch the localized PDF whenever the active language changes
+  useEffect(() => {
+    let isCancelled = false
 
-  const formattedDate = new Date().toLocaleDateString(
-    language === 'sw' ? 'sw-KE' : 'en-KE',
-    { year: 'numeric', month: 'long', day: 'numeric' }
-  )
+    // Clean up old cached iframe and object URL when language switches
+    if (printIframeRef.current && document.body.contains(printIframeRef.current)) {
+      document.body.removeChild(printIframeRef.current)
+      printIframeRef.current = null
+    }
+    if (cachedBlobUrlRef.current) {
+      URL.revokeObjectURL(cachedBlobUrlRef.current)
+      cachedBlobUrlRef.current = null
+    }
 
-  const tierLabel = t(`results.tier.${tier}`)
-  const criteriaDetails = [
-    { label: t('results.criteria.c1'), met: c1 },
-    { label: t('results.criteria.c2'), met: c2 },
-    { label: t('results.criteria.c3'), met: c3 },
-  ]
+    async function warmPdfCache() {
+      try {
+        const blob = await api.fetchDoctorReportBlob(activeLang)
+        if (!isCancelled && blob) {
+          const blobUrl = URL.createObjectURL(blob)
+          cachedBlobUrlRef.current = blobUrl
 
-  const sections = [1, 2, 3, 4].map((n) => ({
-    title: t(`assessment.sections.${n}.label`),
-    fields: SECTION_FIELDS[n],
-  }))
+          // Preload hidden iframe with the localized PDF stream
+          const iframe = document.createElement('iframe')
+          iframe.style.position = 'fixed'
+          iframe.style.right = '0'
+          iframe.style.bottom = '0'
+          iframe.style.width = '0'
+          iframe.style.height = '0'
+          iframe.style.border = '0'
+          iframe.src = blobUrl
+          document.body.appendChild(iframe)
+          printIframeRef.current = iframe
+        }
+      } catch (err) {
+        console.warn('PDF warm cache notice:', err.message)
+      }
+    }
 
-  function handlePrint() {
-    window.print()
+    warmPdfCache()
+
+    return () => {
+      isCancelled = true
+      if (printIframeRef.current && document.body.contains(printIframeRef.current)) {
+        document.body.removeChild(printIframeRef.current)
+        printIframeRef.current = null
+      }
+    }
+  }, [activeLang])
+
+  // Instant localized PDF download
+  async function handleDownload() {
+    if (cachedBlobUrlRef.current) {
+      const downloadAnchor = document.createElement('a')
+      const sanitizedFileName = patientName.replace(/[^a-zA-Z0-9]/g, '_')
+      const langCode = activeLang.toUpperCase()
+
+      downloadAnchor.href = cachedBlobUrlRef.current
+      downloadAnchor.download = `HerCycle_Doctor_Summary_${langCode}_${sanitizedFileName}.pdf`
+      document.body.appendChild(downloadAnchor)
+      downloadAnchor.click()
+      downloadAnchor.remove()
+
+      setDownloaded(true)
+      setTimeout(() => setDownloaded(false), 2000)
+      return
+    }
+
+    try {
+      await api.downloadDoctorReport(patientName, activeLang)
+      setDownloaded(true)
+      setTimeout(() => setDownloaded(false), 2000)
+    } catch (err) {
+      alert(err.message || 'Failed to download report.')
+    }
   }
 
-  function handleDownloadPdf() {
-    setDownloading(true)
+  // Instant localized PDF print
+  async function handlePrint() {
+    setIsPrinting(true)
+
+    // 1. If preloaded iframe is ready, trigger immediate print
+    if (printIframeRef.current?.contentWindow) {
+      try {
+        printIframeRef.current.contentWindow.focus()
+        printIframeRef.current.contentWindow.print()
+        setIsPrinting(false)
+        return
+      } catch {
+        // Fall through to dynamic iframe
+      }
+    }
+
+    // 2. Fetch fresh localized blob if cache was not preloaded
     try {
-      const doc = new jsPDF({ unit: 'pt', format: 'a4' })
-      const pageWidth = doc.internal.pageSize.getWidth()
-      const pageHeight = doc.internal.pageSize.getHeight()
-      const margin = 48
-      let y = 60
+      const blob = cachedBlobUrlRef.current 
+        ? null 
+        : await api.fetchDoctorReportBlob(activeLang)
+      
+      const blobUrl = cachedBlobUrlRef.current || URL.createObjectURL(blob)
 
-      const addLine = (text, size = 11, bold = false, color = PDF_COLORS.plum) => {
-        doc.setFont('helvetica', bold ? 'bold' : 'normal')
-        doc.setFontSize(size)
-        doc.setTextColor(...color)
-        const lines = doc.splitTextToSize(sanitizeForPdf(text), pageWidth - margin * 2)
-        doc.text(lines, margin, y)
-        y += lines.length * (size * 1.35) + 6
+      const tempIframe = document.createElement('iframe')
+      tempIframe.style.position = 'fixed'
+      tempIframe.style.right = '0'
+      tempIframe.style.bottom = '0'
+      tempIframe.style.width = '0'
+      tempIframe.style.height = '0'
+      tempIframe.style.border = '0'
+      tempIframe.src = blobUrl
+
+      document.body.appendChild(tempIframe)
+
+      tempIframe.onload = () => {
+        setTimeout(() => {
+          tempIframe.contentWindow.focus()
+          tempIframe.contentWindow.print()
+          setIsPrinting(false)
+        }, 300)
       }
-
-      const addRule = () => {
-        y += 4
-        doc.setDrawColor(...PDF_COLORS.line)
-        doc.line(margin, y, pageWidth - margin, y)
-        y += 16
-      }
-
-      const checkPageBreak = (needed = 60) => {
-        if (y + needed > pageHeight - margin) {
-          doc.addPage()
-          y = 60
-        }
-      }
-
-      // Header
-      doc.setFillColor(...PDF_COLORS.plum)
-      doc.rect(0, 0, pageWidth, 6, 'F')
-      addLine('HerCycle Kenya \u2014 PCOS Screening Summary', 16, true, PDF_COLORS.plum)
-      addLine(formattedDate, 10, false, PDF_COLORS.soft)
-      addRule()
-
-      // Risk result
-      addLine(`${tierLabel}`, 14, true, tierColor(tier))
-      addLine(t('results.criteriaFlagged', { count: flagCount }), 11)
-      y += 6
-
-      if (medicationCaveat) {
-        addLine(t('results.medicationCaveat'), 9.5, false, PDF_COLORS.amber)
-        y += 4
-      }
-
-      // Criteria checklist — drawn as actual vector circles rather than
-      // text glyphs (filled = flagged, outlined = not flagged), so it
-      // renders identically everywhere instead of depending on font support.
-      addLine(t('results.pdf.criteriaHeading'), 12.5, true)
-      criteriaDetails.forEach((c) => {
-        checkPageBreak(24)
-        const textColor = c.met ? PDF_COLORS.rust : PDF_COLORS.soft
-        doc.setFont('helvetica', 'normal')
-        doc.setFontSize(10.5)
-        doc.setTextColor(...textColor)
-        const label = sanitizeForPdf(c.label)
-        const lines = doc.splitTextToSize(label, pageWidth - margin * 2 - 16)
-
-        const dotCenterY = y - 3.5
-        if (c.met) {
-          doc.setFillColor(...PDF_COLORS.rust)
-          doc.circle(margin + 4, dotCenterY, 3, 'F')
-        } else {
-          doc.setDrawColor(...PDF_COLORS.soft)
-          doc.circle(margin + 4, dotCenterY, 3, 'S')
-        }
-        doc.text(lines, margin + 14, y)
-        y += lines.length * (10.5 * 1.35) + 6
-      })
-      addRule()
-
-      // Answers by section
-      addLine(t('results.pdf.responsesHeading'), 12.5, true)
-      sections.forEach((section) => {
-        checkPageBreak(30)
-        addLine(section.title, 10, true, PDF_COLORS.soft)
-        section.fields.forEach((field) => {
-          checkPageBreak(24)
-          const question = t(`assessment.questions.${field}.title`)
-          const answer = fieldLabel(t, field, answers[field]) || '\u2014'
-          addLine(question, 9, false, PDF_COLORS.soft)
-          addLine(`\u2014 ${answer}`, 9.5, true, PDF_COLORS.plum)
-        })
-      })
-      addRule()
-
-      // Disclaimer
-      checkPageBreak(60)
-      addLine(t('results.disclaimer'), 8.5, false, PDF_COLORS.soft)
-      y += 2
-      addLine(t('results.pdf.disclaimerNote'), 8, false, PDF_COLORS.soft)
-
-      doc.save(`HerCycle-Summary-${new Date().toISOString().slice(0, 10)}.pdf`)
-    } finally {
-      setDownloading(false)
+    } catch (err) {
+      console.warn('Direct PDF print fallback:', err.message)
+      setIsPrinting(false)
+      window.print()
     }
   }
 
   return (
-    <div>
-      <div className="no-print flex gap-3">
-        <button
-          onClick={handleDownloadPdf}
-          disabled={downloading}
-          className="flex-1 flex items-center justify-center gap-2 px-5 py-3.5 rounded-full
-                     bg-plum text-cream text-sm font-semibold
-                     hover:bg-plum-light transition-colors disabled:opacity-60"
-        >
-          {downloading ? t('results.preparingPdf') : t('results.downloadPdf')}
-        </button>
-        <button
-          onClick={handlePrint}
-          className="px-5 py-3.5 rounded-full border border-plum text-plum text-sm font-semibold
-                     hover:bg-plum-tint transition-colors"
-        >
-          {t('results.print')}
-        </button>
+    <div className="bg-[#FAF7F2] border border-[#EBE5DC] rounded-2xl p-6 shadow-sm font-sans text-plum">
+      {/* 1. PATIENT INFORMATION */}
+      <div className="mb-4">
+        <p className="font-mono text-[11px] tracking-[0.15em] text-[#8C827A] uppercase mb-1">
+          {activeLang === 'sw' ? 'TAARIFA ZA MGONJWA' : 'PATIENT INFORMATION'}
+        </p>
+        <h3 className="text-xl font-bold text-[#2D1527]">{patientName}</h3>
+        {patientPhone && (
+          <p className="text-sm text-[#736B66] mt-0.5">{patientPhone}</p>
+        )}
       </div>
 
-      {/* Only shown for actual printing (Ctrl/Cmd+P) — hidden in normal
-          browsing via the "hidden print:block" classes below, and isolated
-          from the rest of the page by the .printable print CSS rule. */}
-      <div
-        id="summary-sheet"
-        className="printable hidden print:block bg-white text-[#1e1e1e] p-8 rounded-2xl max-w-2xl"
-        style={{ fontFamily: 'system-ui, sans-serif' }}
-      >
-        <h2 className="text-xl font-bold m-0">HerCycle Kenya \u2014 PCOS Screening Summary</h2>
-        <p className="text-sm text-gray-500 mt-1">{formattedDate}</p>
+      <hr className="border-t border-[#EBE5DC] my-4" />
 
-        <div
-          className="border rounded-xl px-4 py-3 my-4"
-          style={{ borderColor: tier === 'high' ? '#b42828' : tier === 'moderate' ? '#be8214' : '#28825a' }}
-        >
-          <strong>{tierLabel}</strong>
-          <div className="text-xs text-gray-500 mt-1">
-            {t('results.criteriaFlagged', { count: flagCount })}
-          </div>
+      {/* 2. ROTTERDAM EVALUATION */}
+      <div className="mb-4">
+        <p className="text-[15px] font-semibold text-[#2D1527]">
+          {activeLang === 'sw' ? 'Tathmini ya Rotterdam:' : 'Rotterdam Evaluation:'}{' '}
+          <span className="text-[#C05638] font-bold">{tierLabel}</span>
+        </p>
+        <p className="text-sm text-[#736B66] mt-0.5">
+          {activeLang === 'sw'
+            ? `${flagCount} kati ya vigezo 3 vya Rotterdam vimeonekana.`
+            : `${flagCount} of 3 Rotterdam criteria flagged.`}
+        </p>
+      </div>
+
+      {/* 3. MEDICATION CAVEAT */}
+      {medicationCaveat && (
+        <div className="bg-[#FBF0D9] border border-[#F3DFC1] text-[#8C6B2D] rounded-xl p-3 text-xs mb-4 leading-relaxed">
+          {activeLang === 'sw'
+            ? 'Uko kwenye dawa za homoni, kwa hivyo matokeo haya yanaweza yasiwe thabiti.'
+            : "You're on hormonal medication, so these results may be less reliable."}
         </div>
+      )}
 
-        <ul className="pl-4 text-sm leading-relaxed">
-          {criteriaDetails.map((c, i) => (
-            <li key={i} style={{ opacity: c.met ? 1 : 0.55 }}>
-              {c.met ? '\u2713' : '\u25cb'} {c.label}
-            </li>
-          ))}
-        </ul>
+      {/* 4. RECOMMENDED GYNECOLOGISTS */}
+      <div className="bg-[#F5EFE6] border border-[#E8DFC8] rounded-xl p-4 mb-6">
+        <p className="font-mono text-[11px] tracking-[0.12em] font-bold text-[#2D1527] uppercase mb-1">
+          {activeLang === 'sw' ? 'MADAKTARI WA WANAWAKE WANAOPENDEKEZWA' : 'RECOMMENDED GYNECOLOGISTS'}
+        </p>
+        <p className="text-xs italic text-[#736B66] leading-relaxed">
+          {activeLang === 'sw'
+            ? 'Mawasiliano ya madaktari bingwa wa wanawake na vituo vya rufaa vitapatikana hivi karibuni.'
+            : 'Verified gynecologist contacts and partner referral clinics will be available soon.'}
+        </p>
+      </div>
 
-        {sections.map((section) => (
-          <div key={section.title}>
-            <h3 className="text-sm font-semibold mt-5 mb-2">{section.title}</h3>
-            <dl className="text-sm leading-loose">
-              {section.fields.map((field) => (
-                <div key={field}>
-                  <dt className="text-gray-500 inline">{t(`assessment.questions.${field}.title`)}: </dt>
-                  <dd className="inline font-medium">{fieldLabel(t, field, answers[field]) || '\u2014'}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-        ))}
+      {/* 5. ACTION BUTTONS */}
+      <div className="flex items-center gap-3">
+        <button
+          type="button"
+          onClick={handleDownload}
+          className="flex-1 bg-[#3A2438] hover:bg-[#2A1628] active:scale-[0.99] text-white py-3.5 px-5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all cursor-pointer"
+        >
+          {downloaded ? (
+            <Check size={18} className="text-emerald-300" />
+          ) : (
+            <Download size={18} />
+          )}
+          {downloaded
+            ? (activeLang === 'sw' ? 'Imepakuliwa' : 'Downloaded')
+            : (activeLang === 'sw' ? 'Pakua PDF' : 'Download PDF')}
+        </button>
 
-        <p className="text-xs text-gray-500 mt-6 leading-relaxed">{t('results.disclaimer')}</p>
-        <p className="text-xs text-gray-500 mt-2 leading-relaxed">{t('results.pdf.disclaimerNote')}</p>
+        <button
+          type="button"
+          onClick={handlePrint}
+          disabled={isPrinting}
+          title={activeLang === 'sw' ? 'Chapisha Muhtasari' : 'Print Summary'}
+          aria-label="Print summary sheet"
+          className="bg-[#F5EFE6] hover:bg-[#EBE3D5] active:scale-[0.97] text-[#2D1527] border border-[#E0D7CA] p-3.5 rounded-xl transition-all flex items-center justify-center cursor-pointer disabled:opacity-50"
+        >
+          {isPrinting ? <Loader2 size={18} className="animate-spin" /> : <Printer size={18} />}
+        </button>
       </div>
     </div>
   )

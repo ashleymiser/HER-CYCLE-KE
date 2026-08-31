@@ -23,8 +23,8 @@ export default function Landing() {
         </Link>
         <div className={styles.navRight}>
           <LanguageSwitcher />
-          <Link to="/signup" className={styles.navCta}>
-            {t('landing.nav.signUp')}
+          <Link to="/login" className={styles.navCta}>
+            {t('landing.nav.login')}
           </Link>
         </div>
       </header>
@@ -41,9 +41,9 @@ export default function Landing() {
           <Link to="/signup" className={styles.btnPrimary}>
             {t('landing.hero.ctaPrimary')}
           </Link>
-          <a href="#learn" className={styles.btnGhost}>
-            {t('landing.hero.ctaGhost')}
-          </a>
+          <Link to="/login" className={styles.btnGhost}>
+            {t('landing.hero.ctaLogin')}
+          </Link>
         </div>
       </section>
 

@@ -7,28 +7,53 @@ const STORAGE_KEY = 'hercycle-language'
 
 const LanguageContext = createContext(null)
 
+// In-memory key path cache to eliminate split-reduce overhead during renders
+const pathCache = new Map()
+
 function getFromPath(obj, path) {
-  return path.split('.').reduce((acc, key) => (acc ? acc[key] : undefined), obj)
+  if (!obj) return undefined
+  const cacheKey = path
+
+  if (!pathCache.has(cacheKey)) {
+    pathCache.set(cacheKey, path.split('.'))
+  }
+
+  const keys = pathCache.get(cacheKey)
+  let curr = obj
+  for (let i = 0; i < keys.length; i++) {
+    if (curr === undefined || curr === null) return undefined
+    curr = curr[keys[i]]
+  }
+  return curr
 }
 
 function interpolate(str, vars) {
-  if (!vars) return str
+  if (!vars || typeof str !== 'string') return str
   return str.replace(/\{\{(\w+)\}\}/g, (_, key) => (key in vars ? vars[key] : `{{${key}}}`))
 }
 
 export function LanguageProvider({ children }) {
-  const [language, setLanguageState] = useState(
-    () => localStorage.getItem(STORAGE_KEY) || null
-  )
+  const [language, setLanguageState] = useState(() => {
+    try {
+      return localStorage.getItem(STORAGE_KEY) || null
+    } catch {
+      return null
+    }
+  })
 
   const setLanguage = useCallback((lang) => {
-    localStorage.setItem(STORAGE_KEY, lang)
+    try {
+      localStorage.setItem(STORAGE_KEY, lang)
+    } catch {
+      // ignore
+    }
     setLanguageState(lang)
   }, [])
 
   const t = useCallback(
     (path, vars) => {
-      const dict = DICTIONARIES[language || 'en']
+      const activeLang = language || 'en'
+      const dict = DICTIONARIES[activeLang] || DICTIONARIES.en
       const value = getFromPath(dict, path)
       if (value === undefined) return path
       return interpolate(value, vars)

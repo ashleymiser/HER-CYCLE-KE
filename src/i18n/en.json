@@ -112,7 +112,7 @@
     }
   },
   "results": {
-    "eyebrow": "Result (prototype output)",
+    "eyebrow": "Results output",
     "tier": {
       "high": "Higher likelihood \u2014 worth a clinician visit",
       "moderate": "Some signs \u2014 worth tracking",
@@ -137,14 +137,15 @@
     }
   },
   "landing": {
-    "nav": { "signUp": "Sign up" },
+    "nav": { "login": "Login", "signUp": "Sign up" },
     "hero": {
       "tape": "a health notebook",
       "titleLine1": "Know your cycle.",
       "titleEm": "Know yourself.",
       "sub": "Answers about PMOS, a screening you can actually understand, and a way to get help that doesn't cost a fortune — built for teen girls in Kenya.",
       "ctaPrimary": "Start my notebook",
-      "ctaGhost": "What is PMOS?"
+      "ctaGhost": "What is PMOS?",
+      "ctaLogin": "Login"
     },
     "corkboard": { "heading": "PMOS and HerCycle Kenya" },
     "pmosCard": {
@@ -190,5 +191,20 @@
     "contactPlaceholder": "Phone",
     "submit": "Create my page",
     "note": "No spam"
+  },
+  "login": {
+    "back": "Back",
+    "eyebrow": "welcome back",
+    "title": "Log in to your page",
+    "sub": "Pick up where you left off.",
+    "nameLabel": "Name",
+    "namePlaceholder": "What should we call you?",
+    "contactLabel": "Contact",
+    "contactPlaceholder": "Phone",
+    "submit": "Log in",
+    "loading": "Please wait...",
+    "validationError": "Please enter both your name and phone number.",
+    "switchPrompt": "Not signed up yet?",
+    "switchAction": "Create my page"
   }
 }

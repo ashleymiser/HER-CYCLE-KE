@@ -1,8 +1,10 @@
-import { useEffect } from 'react'
-import { useNavigate, Navigate } from 'react-router-dom'
+import { useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { AlertTriangle, CheckCircle2, MinusCircle, RotateCcw } from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext'
 import { useAssessment } from '../context/AssessmentContext'
+import { useAuth } from '../context/AuthContext'
+import { api } from '../services/api'
 import { scoreAssessment } from '../utils/scoring'
 import LanguageSwitcher from '../components/LanguageSwitcher'
 import SummarySheet from '../components/SummarySheet'
@@ -15,26 +17,48 @@ const TIER_ACCENT = {
 
 export default function Results() {
   const { t, language } = useLanguage()
-  const { answers, resetAnswers, clearSavedDraft } = useAssessment()
+  const { answers, resetAnswers } = useAssessment()
+  const { user } = useAuth()
   const navigate = useNavigate()
+  const submittedRef = useRef(false)
 
-  // Once someone reaches their results, the assessment is done — clear the
-  // saved draft so a future visit starts a fresh assessment instead of
-  // resuming back here. This only clears localStorage, not the in-memory
-  // answers this page still needs to render.
+  // Sync complete assessment data to backend & Supabase once on mount
   useEffect(() => {
-    clearSavedDraft()
-  }, [clearSavedDraft])
+    if (submittedRef.current || !answers) return
 
-  // If someone lands here without having answered anything, send them
-  // back into the assessment rather than showing an empty result.
-  if (!answers.menarcheYears) {
-    return <Navigate to="/assessment" replace />
+    async function syncAssessment() {
+      submittedRef.current = true
+      try {
+        await api.submitAssessment({
+          cycleRegularity: answers.cycleRegularity || (answers.c1_irregular ? 'irregular' : 'regular'),
+          cycleLengthDays: answers.cycleLengthDays || null,
+          hasAcne: Boolean(answers.hasAcne || answers.acne),
+          hasHirsutism: Boolean(answers.hasHirsutism || answers.hirsutism),
+          hasAlopecia: Boolean(answers.hasAlopecia || answers.alopecia || answers.hairThinning),
+          hasMetabolicDisorder: Boolean(answers.hasMetabolicDisorder || answers.metabolic),
+          hasFamilyHistoryPcos: Boolean(answers.hasFamilyHistoryPcos || answers.familyPcos),
+          rawQuestionnaireData: answers,
+        })
+      } catch (err) {
+        console.warn('Backend sync failed:', err.message)
+      }
+    }
+
+    syncAssessment()
+  }, [answers])
+
+  // Safely score assessment without crashing on partial/missing keys
+  const score = scoreAssessment(answers || {})
+  const { c1, c2, c3, flagCount = 0, tier = 'low', medicationCaveat } = score || {}
+  const accent = TIER_ACCENT[tier] || TIER_ACCENT.low
+
+  async function handleDownloadPdf() {
+    try {
+      await api.downloadDoctorReport(user?.fullName || 'Patient', language)
+    } catch (err) {
+      alert(err.message || 'Failed to download report. Ensure the backend server is running.')
+    }
   }
-
-  const score = scoreAssessment(answers)
-  const { c1, c2, c3, flagCount, tier, medicationCaveat } = score
-  const accent = TIER_ACCENT[tier]
 
   function handleStartOver() {
     resetAnswers()
@@ -49,7 +73,7 @@ export default function Results() {
 
   return (
     <div className="min-h-screen bg-sand flex flex-col">
-      <header className="flex justify-between items-center px-6 pt-6">
+      <header className="no-print flex justify-between items-center px-6 pt-6 max-w-4xl w-full mx-auto">
         <button
           onClick={() => navigate('/assessment')}
           className="text-sm text-plum-light hover:text-plum transition-colors"
@@ -94,13 +118,20 @@ export default function Results() {
             ))}
           </div>
 
+          {/* Unified Summary Sheet with internal PDF download */}
           <div className="mb-6">
-            <SummarySheet t={t} language={language} answers={answers} score={score} />
+            <SummarySheet
+              t={t}
+              language={language}
+              answers={answers}
+              score={score}
+              onDownload={handleDownloadPdf}
+            />
           </div>
 
           <button
             onClick={handleStartOver}
-            className="flex items-center gap-1.5 text-sm font-semibold text-plum-light hover:text-plum transition-colors"
+            className="no-print flex items-center gap-1.5 text-sm font-semibold text-plum-light hover:text-plum transition-colors"
           >
             <RotateCcw size={14} /> {t('results.startOver')}
           </button>

@@ -112,7 +112,7 @@
     }
   },
   "results": {
-    "eyebrow": "Matokeo (toleo la majaribio)",
+    "eyebrow": "Matokeo ya programu",
     "tier": {
       "high": "Uwezekano wa juu zaidi \u2014 inafaa kumtembelea daktari",
       "moderate": "Kuna dalili fulani \u2014 inafaa kufuatilia",
@@ -137,14 +137,15 @@
     }
   },
   "landing": {
-    "nav": { "signUp": "Jisajili" },
+    "nav": { "login": "Ingia", "signUp": "Jisajili" },
     "hero": {
       "tape": "shajara ya afya",
       "titleLine1": "Fahamu mzunguko wako.",
       "titleEm": "Jitambue.",
       "sub": "Majibu kuhusu PMOS, uchunguzi unaoeleweka kwa urahisi, na njia ya kupata msaada isiyokugharimu sana — iliyotengenezwa kwa ajili ya wasichana matineja nchini Kenya.",
       "ctaPrimary": "Anza shajara yangu",
-      "ctaGhost": "PMOS ni nini?"
+      "ctaGhost": "PMOS ni nini?",
+      "ctaLogin": "Ingia"
     },
     "corkboard": { "heading": "PMOS na HerCycle Kenya" },
     "pmosCard": {
@@ -190,5 +191,20 @@
     "contactPlaceholder": "Simu",
     "submit": "Tengeneza ukurasa wangu",
     "note": "Hakuna spam"
+  },
+  "login": {
+    "back": "Rudi",
+    "eyebrow": "karibu tena",
+    "title": "Ingia kwenye ukurasa wako",
+    "sub": "Rudi mahali ulipoacha.",
+    "nameLabel": "Jina",
+    "namePlaceholder": "Tukuiteje?",
+    "contactLabel": "Mawasiliano",
+    "contactPlaceholder": "Simu",
+    "submit": "Ingia",
+    "loading": "Tafadhali subiri...",
+    "validationError": "Tafadhali ingiza jina na nambari ya simu.",
+    "switchPrompt": "Bado hujasajili?",
+    "switchAction": "Tengeneza ukurasa wangu"
   }
 }
