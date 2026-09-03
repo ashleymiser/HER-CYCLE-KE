@@ -134,7 +134,6 @@ export default function Signup() {
           <button type="submit" className={styles.journalSubmit} disabled={loading}>
             {t('signup.submit')}
           </button>
-
         </form>
       </section>
     </div>
