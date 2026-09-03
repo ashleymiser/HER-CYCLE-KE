@@ -132,10 +132,9 @@ export default function Signup() {
           </div>
 
           <button type="submit" className={styles.journalSubmit} disabled={loading}>
-            {loading ? (t('signup.loading') || 'Please wait...') : t('signup.submit')}
+            {t('signup.submit')}
           </button>
 
-          <p className={styles.journalNote}>{t('signup.note')}</p>
         </form>
       </section>
     </div>
