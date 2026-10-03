@@ -26,3 +26,6 @@ dist-ssr
 
 # Reference files
 hercycle.zip
+
+# Omission of the vercel output directory
+vercel.json
