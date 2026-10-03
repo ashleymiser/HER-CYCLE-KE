@@ -16,7 +16,7 @@ export default defineConfig({
   build: {
     target: 'esnext',
     cssCodeSplit: true,
-    minify: 'esbuild',
+    // Deleted the minify option to avoid issues with the build process 
     rollupOptions: {
       output: {
         manualChunks(id) {
