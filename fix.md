@@ -16,14 +16,14 @@ Status key: `[ ]` open, `[x]` done. Priority: **P0** blocks launch, **P1** shoul
 
 ### 2. Assessment payload mismatch in `Results.jsx` (P0)
 Real answer keys are `cycleLength`, `periodsLast12`, `gone3mo`, `acne`, `excessHair`, `scalpThin`, `priorHormone`, `weightChange`, `skinPatches`, `familyHistory`, `toldPCO`, `onMedication`. The submit code reads keys that don't exist (`cycleRegularity`, `hasAcne`, `hirsutism`, `alopecia`, `metabolic`, `familyPcos`).
-- [ ] Decide the source of truth: backend reads `rawQuestionnaireData` only, or the frontend sends correct derived fields
-- [ ] Fix `hasAcne`: currently `Boolean(answers.acne)` is `true` for `'none'` (non-empty string)
-- [ ] Map `cycleRegularity` and `cycleLengthDays` from real fields, or drop them
-- [ ] Map `hasHirsutism` from `excessHair === 'yes'`
-- [ ] Map `hasAlopecia` from `scalpThin === 'yes'`
-- [ ] Map `hasFamilyHistoryPcos` from `familyHistory === 'yes'`
-- [ ] Map `hasMetabolicDisorder` from real fields (`weightChange`, `skinPatches`, `priorHormone`), once the meaning is agreed
-- [ ] Also send the computed `tier`, `c1`, `c2`, `c3` so the server doesn't have to re-derive them differently
+- [x] Decide the source of truth: backend reads `rawQuestionnaireData` only, or the frontend sends correct derived fields *(frontend now sends both; raw data stays authoritative)*
+- [x] Fix `hasAcne`: currently `Boolean(answers.acne)` is `true` for `'none'` (non-empty string) *(now true only for mild/moderate/severe)*
+- [x] Map `cycleRegularity` and `cycleLengthDays` from real fields, or drop them *(regularity mapped; days sent as `null` because the form only collects a bucket)*
+- [x] Map `hasHirsutism` from `excessHair === 'yes'`
+- [x] Map `hasAlopecia` from `scalpThin === 'yes'`
+- [x] Map `hasFamilyHistoryPcos` from `familyHistory === 'yes'`
+- [x] Map `hasMetabolicDisorder` from real fields (`weightChange`, `skinPatches`, `priorHormone`), once the meaning is agreed *(provisional: `weightChange` or `skinPatches` = yes; needs confirming)*
+- [x] Also send the computed `tier`, `c1`, `c2`, `c3` so the server doesn't have to re-derive them differently *(sent as `riskTier`, `criteria`, `flagCount`, `onMedication`; backend must accept them)*
 - [ ] Confirm the backend's PDF uses the same scoring logic as `scoring.js` (no drift between on-screen tier and PDF tier)
 
 ### 3. Authentication is name + phone only (P0)
