@@ -34,11 +34,17 @@ export function isSectionComplete(answers, sectionIndex) {
   return fields.every((f) => Boolean(answers[f]))
 }
 
-export function scoreAssessment(a) {
-  const irregular =
+// Raw cycle irregularity, before any adjustment for years since menarche.
+export function isCycleIrregular(a) {
+  return (
     ['<21', '36-45', '>45', 'varies'].includes(a.cycleLength) ||
     ['4-7', '1-3', 'none'].includes(a.periodsLast12) ||
     a.gone3mo === 'yes'
+  )
+}
+
+export function scoreAssessment(a) {
+  const irregular = isCycleIrregular(a)
 
   let c1 = false
   if (a.menarcheYears === '>3') {
@@ -75,5 +81,35 @@ export function scoreAssessment(a) {
     flagCount,
     tier, // 'high' | 'moderate' | 'low'
     medicationCaveat: a.onMedication === 'yes',
+  }
+}
+
+
+// Builds the body for POST /assessments from the real questionnaire keys.
+// Every derived field is computed from the answers the form actually
+// collects, so nothing silently falls back to a default. The full raw
+// answers are still sent as rawQuestionnaireData (that is what gets
+// restored on login), and the computed score is sent alongside so the
+// backend and PDF never have to re-derive the tier differently.
+export function buildAssessmentPayload(answers, score = scoreAssessment(answers)) {
+  const a = answers || {}
+  return {
+    // Raw irregularity (not the menarche-adjusted c1 criterion).
+    cycleRegularity: isCycleIrregular(a) ? 'irregular' : 'regular',
+    // The form collects a cycle-length bucket, not a number of days.
+    // Bucket is in rawQuestionnaireData.cycleLength.
+    cycleLengthDays: null,
+    hasAcne: ['mild', 'moderate', 'severe'].includes(a.acne),
+    hasHirsutism: a.excessHair === 'yes',
+    hasAlopecia: a.scalpThin === 'yes',
+    // The form does not ask about a diagnosed metabolic disorder. This is
+    // a screening-sign flag (weight change or skin patches), not a diagnosis.
+    hasMetabolicDisorder: a.weightChange === 'yes' || a.skinPatches === 'yes',
+    hasFamilyHistoryPcos: a.familyHistory === 'yes',
+    riskTier: score.tier,
+    criteria: { c1: score.c1, c2: score.c2, c3: score.c3 },
+    flagCount: score.flagCount,
+    onMedication: Boolean(score.medicationCaveat),
+    rawQuestionnaireData: a,
   }
 }
