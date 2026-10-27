@@ -5,7 +5,7 @@ import { useLanguage } from '../context/LanguageContext'
 import { useAssessment } from '../context/AssessmentContext'
 import { useAuth } from '../context/AuthContext'
 import { api } from '../services/api'
-import { scoreAssessment } from '../utils/scoring'
+import { scoreAssessment, buildAssessmentPayload } from '../utils/scoring'
 import LanguageSwitcher from '../components/LanguageSwitcher'
 import SummarySheet from '../components/SummarySheet'
 
@@ -29,16 +29,7 @@ export default function Results() {
     async function syncAssessment() {
       submittedRef.current = true
       try {
-        await api.submitAssessment({
-          cycleRegularity: answers.cycleRegularity || (answers.c1_irregular ? 'irregular' : 'regular'),
-          cycleLengthDays: answers.cycleLengthDays || null,
-          hasAcne: Boolean(answers.hasAcne || answers.acne),
-          hasHirsutism: Boolean(answers.hasHirsutism || answers.hirsutism),
-          hasAlopecia: Boolean(answers.hasAlopecia || answers.alopecia || answers.hairThinning),
-          hasMetabolicDisorder: Boolean(answers.hasMetabolicDisorder || answers.metabolic),
-          hasFamilyHistoryPcos: Boolean(answers.hasFamilyHistoryPcos || answers.familyPcos),
-          rawQuestionnaireData: answers,
-        })
+        await api.submitAssessment(buildAssessmentPayload(answers))
       } catch (err) {
         console.warn('Backend sync failed:', err.message)
       }
