@@ -48,13 +48,22 @@ function RequireLanguage({ children }) {
 function ProtectedRoute({ children }) {
   const { isAuthenticated, loading } = useAuth()
   const location = useLocation()
-  const hasToken = Boolean(localStorage.getItem('hercycle_token'))
 
-  if (loading && !hasToken) {
-    return null
+  // Session is still being restored from storage / verified: show a spinner
+  // rather than a blank screen.
+  if (loading) {
+    return (
+      <div
+        className="min-h-screen bg-sand flex items-center justify-center"
+        role="status"
+        aria-label="Loading"
+      >
+        <span className="w-6 h-6 rounded-full border-2 border-plum-light border-t-transparent animate-spin" />
+      </div>
+    )
   }
 
-  if (!isAuthenticated && !hasToken) {
+  if (!isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />
   }
 
