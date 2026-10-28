@@ -4,6 +4,7 @@ import { useLanguage } from '../context/LanguageContext'
 import { useAuth } from '../context/AuthContext'
 import { useAssessment } from '../context/AssessmentContext'
 import { api } from '../services/api'
+import { authErrorKey } from '../utils/authErrors'
 import styles from '../styles/scrapbook.module.css'
 
 const SAVED_PROFILES_KEY = 'hercycle_saved_profiles'
@@ -27,7 +28,7 @@ export default function Signup() {
     const cleanContact = contact.trim()
 
     if (!cleanName || !cleanContact) {
-      setError(t('signup.validationError') || 'Please enter both your name and phone number.')
+      setError(t('signup.validationError'))
       return
     }
 
@@ -59,7 +60,7 @@ export default function Signup() {
       saveAuth(data.user, data.token, null)
       navigate('/home')
     } catch (err) {
-      setError(err.message || 'Unable to register. Please try again.')
+      setError(t(authErrorKey(err, 'register')))
     } finally {
       setLoading(false)
     }

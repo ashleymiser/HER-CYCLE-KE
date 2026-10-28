@@ -4,12 +4,13 @@ import { useLanguage } from '../context/LanguageContext'
 import { useAuth } from '../context/AuthContext'
 import { useAssessment } from '../context/AssessmentContext'
 import { api } from '../services/api'
+import { authErrorKey } from '../utils/authErrors'
 import styles from '../styles/scrapbook.module.css'
 
 const SAVED_PROFILES_KEY = 'hercycle_saved_profiles'
 
 export default function Login() {
-  const { t, language } = useLanguage()
+  const { t } = useLanguage()
   const { saveAuth, logout } = useAuth()
   const { loadHistoricalAnswers } = useAssessment()
   const navigate = useNavigate()
@@ -62,11 +63,7 @@ export default function Login() {
     const cleanContact = contact.trim()
 
     if (!cleanName || !cleanContact) {
-      setError(
-        language === 'sw'
-          ? 'Tafadhali weka jina lako na nambari ya simu.'
-          : 'Please enter both your name and phone number.'
-      )
+      setError(t('login.validationError'))
       return
     }
 
@@ -79,7 +76,9 @@ export default function Login() {
       })
 
       if (!data || !data.token) {
-        throw new Error('Invalid credentials')
+        logout()
+        setError(t('authErrors.invalidCredentials'))
+        return
       }
 
       // Save valid login to suggestions cache
@@ -104,8 +103,11 @@ export default function Login() {
       saveAuth(data.user, data.token, data.latestAssessment)
       navigate('/home')
     } catch (err) {
-      logout()
-      setError('Invalid credentials')
+      const key = authErrorKey(err, 'login')
+      // Only drop an existing session when the credentials were rejected,
+      // not when the network or server failed.
+      if (key === 'authErrors.invalidCredentials') logout()
+      setError(t(key))
     } finally {
       setLoading(false)
     }

@@ -187,7 +187,15 @@
     },
     "footer": "Kwa sababu tunajali"
   },
-    "signup": {
+    "authErrors": {
+    "network": "Hatukuweza kufikia seva. Tafadhali angalia mtandao wako na ujaribu tena.",
+    "server": "Kuna hitilafu upande wetu. Tafadhali jaribu tena baada ya muda mfupi.",
+    "tooMany": "Majaribio mengi mno. Tafadhali subiri kidogo kisha ujaribu tena.",
+    "invalidCredentials": "Taarifa hizo hazilingani na akaunti yoyote. Tafadhali angalia na ujaribu tena.",
+    "accountExists": "Akaunti yenye taarifa hizi tayari ipo. Jaribu kuingia badala yake.",
+    "generic": "Hatukuweza kukamilisha hilo. Tafadhali angalia taarifa zako na ujaribu tena."
+  },
+  "signup": {
     "back": "Rudi",
     "eyebrow": "ukurasa wa mwisho, naahidi",
     "title": "Hifadhi nafasi yako",
@@ -197,7 +205,8 @@
     "contactLabel": "Mawasiliano",
     "contactPlaceholder": "Simu",
     "submit": "Tengeneza ukurasa wangu",
-    "note": "Hakuna spam"
+    "note": "Hakuna spam",
+    "validationError": "Tafadhali ingiza jina na nambari ya simu."
   },
   "login": {
     "back": "Rudi",

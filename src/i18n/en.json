@@ -187,6 +187,14 @@
     },
     "footer": "Because we care"
   },
+  "authErrors": {
+    "network": "We couldn't reach the server. Please check your connection and try again.",
+    "server": "Something went wrong on our side. Please try again in a moment.",
+    "tooMany": "Too many attempts. Please wait a bit and try again.",
+    "invalidCredentials": "Those details don't match an account. Please check and try again.",
+    "accountExists": "An account with these details already exists. Try logging in instead.",
+    "generic": "We couldn't complete that. Please check your details and try again."
+  },
   "signup": {
     "back": "Back",
     "eyebrow": "last page, promise",
@@ -197,7 +205,8 @@
     "contactLabel": "Contact",
     "contactPlaceholder": "Phone",
     "submit": "Create my page",
-    "note": "No spam"
+    "note": "No spam",
+    "validationError": "Please enter both your name and phone number."
   },
   "login": {
     "back": "Back",
