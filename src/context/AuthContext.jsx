@@ -1,5 +1,5 @@
- import { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
-import { api } from '../services/api';
+import { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
+import { api, setUnauthorizedHandler } from '../services/api';
 
 const AuthContext = createContext(null);
 
@@ -28,7 +28,15 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('hercycle_user');
     localStorage.removeItem('hercycle_token');
     localStorage.removeItem('hercycle_last_assessment');
+    localStorage.removeItem('hercycle_synced_assessment');
   }, []);
+
+  // Any authenticated API call that returns 401 (expired/revoked token)
+  // logs the user out, instead of each caller having to remember to.
+  useEffect(() => {
+    setUnauthorizedHandler(logout);
+    return () => setUnauthorizedHandler(null);
+  }, [logout]);
 
   // Background verification on app mount
   useEffect(() => {
@@ -53,11 +61,8 @@ export function AuthProvider({ children }) {
         }
       } catch (err) {
         console.warn('Session background sync notice:', err.message);
-        if (
-          err.message?.includes('401') ||
-          err.message?.includes('403') ||
-          err.message?.includes('unauthorized')
-        ) {
+        // Decide by HTTP status, not by the wording of the error message.
+        if (err.status === 401 || err.status === 403) {
           if (isMounted) logout();
         }
       } finally {
