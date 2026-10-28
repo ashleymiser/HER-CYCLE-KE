@@ -57,7 +57,7 @@ Changes made are documented in [MyChanges.md, Change 2](./MyChanges.md#change-2-
 - [x] `ProtectedRoute` trusts the mere presence of a token string. Validate against `getMe()` before rendering protected pages, or at least handle expiry gracefully *(waits for session restore, then relies on `isAuthenticated`; expired tokens are logged out and redirected. Cached users still render optimistically while `getMe()` verifies in the background)*
 - [x] `alert()` used for PDF errors. Replace with an inline error component *(inline error in `SummarySheet`; the dead `handleDownloadPdf`/`onDownload` path in `Results.jsx` was removed)*
 - [x] `ProtectedRoute` returns `null` while loading (blank flash). Show a spinner
-- [ ] **TODO:** Kiswahili strings added in this change (`results.sync.*`, `results.pdfError`) need review by a native speaker (see item 8)
+- [ ] **TODO:** Kiswahili strings added in items 5 and 12 (`results.sync.*`, `results.pdfError`, `authErrors.*`, `signup.validationError`) (`results.sync.*`, `results.pdfError`) need review by a native speaker (see item 8)
 - [ ] **NOTE:** `AssessmentContext` still triggers an `oxlint` `set-state-in-effect` warning (pre-existing). Not touched here
 
 ### 6. Leftovers and cleanup (P2)
@@ -89,12 +89,12 @@ Changes made are documented in [MyChanges.md, Change 2](./MyChanges.md#change-2-
 - [ ] Missing keys silently render as raw paths (e.g. `landing.footer`): log a dev warning in `t()`
 - [ ] `Assessment.jsx` detects missing help text with `help.startsWith('assessment.')`, which is brittle. Have `t()` return `null` or accept a fallback argument
 - [ ] Have a native Kiswahili speaker review the translations, especially the medical wording
-- [ ] Several hard-coded English fallbacks exist (e.g. "Please enter both your name and phone number."). Move them to i18n
+- [ ] Several hard-coded English fallbacks exist. Login/Signup validation and auth errors are now in i18n; still to audit: the `Please wait...` fallback in `Login.jsx`, the English-only `SummarySheet` labels, and `aria-label`s
 
 ### 9. Input validation (P1)
 - [ ] Validate phone number format (Kenyan formats: `07xx`, `01xx`, `+254`) and normalise before sending
 - [ ] Trim and length-limit the name field
-- [ ] Handle duplicate registration (409) with a clear message and a link to log in
+- [ ] Handle duplicate registration (409) with a clear message and a link to log in *(message done in item 12; the link to log in is still to add)*
 
 ### 10. Product gaps from the README (P2)
 - [ ] Cross-device resume of in-progress assessments (needs a draft-save endpoint; currently only completed assessments sync)
@@ -112,15 +112,19 @@ Changes made are documented in [MyChanges.md, Change 2](./MyChanges.md#change-2-
 - [ ] Add analytics/error monitoring that does not capture health answers
 
 ### 12. New findings from the item 5 work
-- [ ] **Results page shows a reassuring tier for empty answers** (P0, screening-tool safety). Opening `/results` directly with no or partial answers displays "No strong signs right now", because the scorer treats blanks as "no". Redirect to `/assessment`, or show a "complete the assessment first" state, instead of any tier
-- [ ] `Login.jsx` catches *every* error (including network failures and 5xx) and shows "Invalid credentials". Use `err.status` / `err.isNetworkError` to show an accurate message
-- [ ] `Login.jsx` and `Signup.jsx` show `err.message` straight from the API layer, so network errors appear in English only. Route these messages through i18n (item 8)
+Changes made are documented in [MyChanges.md, Change 3](./MyChanges.md#change-3-item-12-follow-ups).
+- [x] **Results page shows a reassuring tier for empty answers** (P0, screening-tool safety). *(done: `/results` now redirects to `/assessment` unless all 4 sections are answered)* Opening `/results` directly with no or partial answers displays "No strong signs right now", because the scorer treats blanks as "no". Redirect to `/assessment`, or show a "complete the assessment first" state, instead of any tier
+- [x] `Login.jsx` catches *every* error (including network failures and 5xx) and shows "Invalid credentials". Use `err.status` / `err.isNetworkError` to show an accurate message *(done via `authErrorKey`; an existing session is only dropped when credentials are rejected)*
+- [x] `Login.jsx` and `Signup.jsx` show `err.message` straight from the API layer, so network errors appear in English only. Route these messages through i18n (item 8) *(done: new `authErrors.*` strings in English and Kiswahili)*
+
+- [ ] **TODO (blocked, no backend info yet):** confirm which HTTP statuses the backend returns for bad credentials (assumed 400/401/403/404), duplicate registration (assumed 409) and rate limiting (assumed 429). `authErrorKey` in `src/utils/authErrors.js` depends on these
+- [ ] **NOTE:** other 4xx responses on register show a generic translated message, so the server's own English validation text is no longer shown. Revisit once the backend's error format is known
 
 ---
 
 ## Suggested order of work
 1. ~~Item 2 (payload mismatch)~~ done
-2. ~~Item 5 (fragile logic)~~ done; do the P0 in item 12 next
+2. ~~Item 5 (fragile logic)~~ and ~~item 12~~ done
 3. Item 3 and 4 (auth and token handling): needs a decision on OTP vs PIN first
 4. Item 7 (clinical review): start early, since it depends on other people
 5. Items 1, 6, 8, 9, then 10 and 11

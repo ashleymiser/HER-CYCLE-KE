@@ -82,3 +82,46 @@ Editing any answer changes the signature, so a new save happens. A failed save l
 - **NOTE:** error messages from the API layer are still English-only (e.g. the network error text). Login/Signup show them directly (fix.md item 12).
 - **NOTE:** a cached user still renders protected pages immediately while `getMe()` verifies in the background. If the token is expired, the user is logged out and redirected moments later.
 - New findings from this work were added as item 12 in fix.md. The most important: `/results` shows "No strong signs right now" when opened with empty answers, which conflicts with the screening-tool principle.
+
+
+---
+
+## Change 3: Item 12 follow-ups
+
+**Problems:** `/results` showed "No strong signs right now" for empty answers; Login reported every failure as "Invalid credentials"; Login/Signup showed English-only API messages. Also, `signup.validationError` did not exist, so a missing-field error on Signup would have displayed the raw key.
+
+**Files changed**
+
+| File | Change |
+|---|---|
+| `src/pages/Results.jsx` | If the questionnaire is not complete (all 4 sections answered), redirects to `/assessment` before showing any tier or saving anything |
+| `src/utils/authErrors.js` | New. `authErrorKey(err, context)` maps an `ApiError` to an i18n key by status / `isNetworkError` |
+| `src/pages/Login.jsx` | Uses `authErrorKey` and `t()` for validation and errors. Only calls `logout()` when credentials were rejected, not on network/server failures. Missing token in a success response is treated as invalid credentials without throwing |
+| `src/pages/Signup.jsx` | Uses `authErrorKey` and `t()` for validation and errors |
+| `src/i18n/en.json`, `src/i18n/sw.json` | Added `authErrors.{network,server,tooMany,invalidCredentials,accountExists,generic}` and `signup.validationError` |
+
+### Status mapping used by `authErrorKey`
+
+| Condition | Key |
+|---|---|
+| Network failure | `authErrors.network` |
+| 429 | `authErrors.tooMany` |
+| 5xx | `authErrors.server` |
+| Login, any other failure | `authErrors.invalidCredentials` |
+| Register, 409 | `authErrors.accountExists` |
+| Register, any other failure | `authErrors.generic` |
+
+### Verification
+Run with a temporary Vitest + Testing Library setup (installed with `--no-save`, not added to the project):
+- `authErrorKey` returns the expected key for each row above.
+- `/results` with empty answers redirects to `/assessment`, shows no tier, and does not call `submitAssessment`.
+- `/results` with one answer missing also redirects.
+- `/results` with all answers shows the tier, calls `submitAssessment` exactly once, and shows the "saved" message.
+- `oxlint` shows no warnings in the touched files, and `npm run build` passes.
+- **Not yet checked in a browser** against a real backend.
+
+### Notes and TODOs
+- **TODO:** native-speaker review of the new Kiswahili strings.
+- **TODO (blocked, no backend info yet):** confirm the statuses the backend returns for bad credentials, duplicate registration and rate limiting. The mapping above assumes 4xx for credentials, 409 for duplicates and 429 for rate limits.
+- **NOTE:** other 4xx errors on register now show a generic translated message instead of the server's own (English) text.
+- **NOTE:** the temporary tests were not kept. Adding permanent tests is fix.md item 11.
