@@ -128,6 +128,13 @@
     "startOver": "Anza upya",
     "disclaimer": "Toleo la majaribio kwa upimaji wa ndani tu \u2014 si chombo cha utambuzi.",
     "downloadPdf": "Pakua PDF",
+    "sync": {
+      "saving": "Tunahifadhi matokeo yako\u2026",
+      "saved": "Matokeo yamehifadhiwa kwenye akaunti yako.",
+      "failed": "Hatukuweza kuhifadhi matokeo yako kwenye akaunti yako. Majibu yako bado yapo kwenye kifaa hiki.",
+      "retry": "Jaribu tena"
+    },
+    "pdfError": "Hatukuweza kuandaa PDF yako. Tafadhali angalia mtandao wako na ujaribu tena.",
     "preparingPdf": "Inatayarisha\u2026",
     "print": "Chapisha",
     "pdf": {

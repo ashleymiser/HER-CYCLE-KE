@@ -128,6 +128,13 @@
     "startOver": "Start over",
     "disclaimer": "Prototype for internal validation only \u2014 not a diagnostic tool.",
     "downloadPdf": "Download PDF",
+    "sync": {
+      "saving": "Saving your results\u2026",
+      "saved": "Results saved to your account.",
+      "failed": "We couldn't save your results to your account. Your answers are still on this device.",
+      "retry": "Try again"
+    },
+    "pdfError": "We couldn't prepare your PDF. Please check your connection and try again.",
     "preparingPdf": "Preparing\u2026",
     "print": "Print",
     "pdf": {

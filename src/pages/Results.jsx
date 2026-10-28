@@ -1,11 +1,17 @@
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { AlertTriangle, CheckCircle2, MinusCircle, RotateCcw } from 'lucide-react'
+import { AlertTriangle, CheckCircle2, Loader2, MinusCircle, RotateCcw } from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext'
 import { useAssessment } from '../context/AssessmentContext'
 import { useAuth } from '../context/AuthContext'
 import { api } from '../services/api'
-import { scoreAssessment, buildAssessmentPayload } from '../utils/scoring'
+import {
+  initialAnswers,
+  scoreAssessment,
+  buildAssessmentPayload,
+  isSectionComplete,
+  SECTION_FIELDS,
+} from '../utils/scoring'
 import LanguageSwitcher from '../components/LanguageSwitcher'
 import SummarySheet from '../components/SummarySheet'
 
@@ -15,41 +21,79 @@ const TIER_ACCENT = {
   low: { text: 'text-sage', bg: 'bg-sage-light' },
 }
 
+const SYNC_KEY = 'hercycle_synced_assessment'
+const ANSWER_KEYS = Object.keys(initialAnswers)
+
+// Stable fingerprint of the questionnaire answers (key order independent).
+function answersSignature(a) {
+  return JSON.stringify(ANSWER_KEYS.map((k) => a?.[k] ?? ''))
+}
+
+function readSynced() {
+  try {
+    return JSON.parse(localStorage.getItem(SYNC_KEY))
+  } catch {
+    return null
+  }
+}
+
+function isQuestionnaireComplete(answers) {
+  return Object.keys(SECTION_FIELDS).every((section) => isSectionComplete(answers || {}, Number(section)))
+}
+
 export default function Results() {
   const { t, language } = useLanguage()
   const { answers, resetAnswers } = useAssessment()
   const { user } = useAuth()
   const navigate = useNavigate()
-  const submittedRef = useRef(false)
+  const inFlightRef = useRef(null)
+  // 'idle' | 'saving' | 'saved' | 'error'
+  const [syncStatus, setSyncStatus] = useState('idle')
 
-  // Sync complete assessment data to backend & Supabase once on mount
-  useEffect(() => {
-    if (submittedRef.current || !answers) return
+  const userId = String(user?.id ?? '')
+  const signature = answersSignature(answers)
+  const complete = isQuestionnaireComplete(answers)
 
-    async function syncAssessment() {
-      submittedRef.current = true
+  // These exact answers are already saved if this device synced them for this
+  // user, or if the server's latest assessment matches them (e.g. after login).
+  const synced = readSynced()
+  const serverAnswers = user?.latestAssessment?.raw_questionnaire_data
+  const alreadySynced =
+    (synced?.userId === userId && synced?.signature === signature) ||
+    (serverAnswers && answersSignature(serverAnswers) === signature)
+
+  const syncAssessment = useCallback(async () => {
+    inFlightRef.current = signature
+    setSyncStatus('saving')
+    try {
+      await api.submitAssessment(buildAssessmentPayload(answers))
       try {
-        await api.submitAssessment(buildAssessmentPayload(answers))
-      } catch (err) {
-        console.warn('Backend sync failed:', err.message)
+        localStorage.setItem(SYNC_KEY, JSON.stringify({ userId, signature }))
+      } catch {
+        // ignore storage failures
       }
+      setSyncStatus('saved')
+    } catch (err) {
+      console.warn('Backend sync failed:', err.message)
+      inFlightRef.current = null // allow a retry
+      setSyncStatus('error')
     }
+  }, [answers, signature, userId])
 
+  // Save to the backend once per distinct set of complete answers. Revisiting
+  // this page (or React StrictMode re-running effects) does not re-submit.
+  useEffect(() => {
+    if (!complete || alreadySynced) return
+    if (inFlightRef.current === signature) return
     syncAssessment()
-  }, [answers])
+  }, [complete, alreadySynced, signature, syncAssessment])
+
+  const status = alreadySynced ? 'saved' : syncStatus
 
   // Safely score assessment without crashing on partial/missing keys
   const score = scoreAssessment(answers || {})
   const { c1, c2, c3, flagCount = 0, tier = 'low', medicationCaveat } = score || {}
   const accent = TIER_ACCENT[tier] || TIER_ACCENT.low
-
-  async function handleDownloadPdf() {
-    try {
-      await api.downloadDoctorReport(user?.fullName || 'Patient', language)
-    } catch (err) {
-      alert(err.message || 'Failed to download report. Ensure the backend server is running.')
-    }
-  }
 
   function handleStartOver() {
     resetAnswers()
@@ -109,6 +153,36 @@ export default function Results() {
             ))}
           </div>
 
+          {complete && status !== 'idle' && (
+            <div className="no-print mb-4" role="status" aria-live="polite">
+              {status === 'saving' && (
+                <p className="flex items-center gap-1.5 text-xs text-plum-light">
+                  <Loader2 size={13} className="animate-spin" /> {t('results.sync.saving')}
+                </p>
+              )}
+              {status === 'saved' && (
+                <p className="flex items-center gap-1.5 text-xs text-plum-light">
+                  <CheckCircle2 size={13} className="text-sage" /> {t('results.sync.saved')}
+                </p>
+              )}
+              {status === 'error' && (
+                <div className="flex items-start justify-between gap-3 rounded-lg p-3 text-xs bg-amber-light text-plum">
+                  <span className="flex items-start gap-2">
+                    <AlertTriangle size={15} className="text-amber mt-0.5 flex-shrink-0" />
+                    {t('results.sync.failed')}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={syncAssessment}
+                    className="font-semibold underline whitespace-nowrap"
+                  >
+                    {t('results.sync.retry')}
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Unified Summary Sheet with internal PDF download */}
           <div className="mb-6">
             <SummarySheet
@@ -116,7 +190,6 @@ export default function Results() {
               language={language}
               answers={answers}
               score={score}
-              onDownload={handleDownloadPdf}
             />
           </div>
 

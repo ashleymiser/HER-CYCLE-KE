@@ -3,10 +3,11 @@ import { Printer, Download, Check, Loader2 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { api } from '../services/api'
 
-export default function SummarySheet({ t, language, answers, score, onDownload }) {
+export default function SummarySheet({ t, language, answers, score }) {
   const { user } = useAuth()
   const [downloaded, setDownloaded] = useState(false)
   const [isPrinting, setIsPrinting] = useState(false)
+  const [actionError, setActionError] = useState('')
   const cachedBlobUrlRef = useRef(null)
   const printIframeRef = useRef(null)
 
@@ -71,6 +72,7 @@ export default function SummarySheet({ t, language, answers, score, onDownload }
 
   // Instant localized PDF download
   async function handleDownload() {
+    setActionError('')
     if (cachedBlobUrlRef.current) {
       const downloadAnchor = document.createElement('a')
       const sanitizedFileName = patientName.replace(/[^a-zA-Z0-9]/g, '_')
@@ -92,7 +94,8 @@ export default function SummarySheet({ t, language, answers, score, onDownload }
       setDownloaded(true)
       setTimeout(() => setDownloaded(false), 2000)
     } catch (err) {
-      alert(err.message || 'Failed to download report.')
+      console.warn('PDF download failed:', err.message)
+      setActionError(t('results.pdfError'))
     }
   }
 
@@ -222,6 +225,12 @@ export default function SummarySheet({ t, language, answers, score, onDownload }
           {isPrinting ? <Loader2 size={18} className="animate-spin" /> : <Printer size={18} />}
         </button>
       </div>
+
+      {actionError && (
+        <p role="alert" className="text-xs text-[#C05638] mt-3">
+          {actionError}
+        </p>
+      )}
     </div>
   )
 }
