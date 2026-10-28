@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { AlertTriangle, CheckCircle2, Loader2, MinusCircle, RotateCcw } from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext'
 import { useAssessment } from '../context/AssessmentContext'
@@ -89,6 +89,12 @@ export default function Results() {
   }, [complete, alreadySynced, signature, syncAssessment])
 
   const status = alreadySynced ? 'saved' : syncStatus
+
+  // Never show a result (especially a reassuring one) for answers that are
+  // missing, e.g. when /results is opened directly. Send her to the questions.
+  if (!complete) {
+    return <Navigate to="/assessment" replace />
+  }
 
   // Safely score assessment without crashing on partial/missing keys
   const score = scoreAssessment(answers || {})
