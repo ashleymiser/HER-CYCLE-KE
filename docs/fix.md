@@ -50,12 +50,15 @@ Anyone who knows a girl's name and number can log in and read her health data. U
 - [ ] Clear `hercycle-assessment-answers` and all `hercycle_*` keys on logout (currently only user, token and last_assessment are cleared)
 
 ### 5. Fragile logic (P1)
-- [ ] `AuthContext`: logout on 401/403 is detected by searching the **error message text**. Make `api.js` throw an error carrying `status`, and check that instead
-- [ ] `Results.jsx`: submission effect depends on `[answers]` and is guarded by a ref, so re-visits and StrictMode behave oddly. Submit on explicit "finish" in `Assessment.jsx`, or key by assessment id
-- [ ] Failed submission is only `console.warn`ed, so the user never knows it didn't save. Add a visible retry or "not saved" state
-- [ ] `ProtectedRoute` trusts the mere presence of a token string. Validate against `getMe()` before rendering protected pages, or at least handle expiry gracefully
-- [ ] `alert()` used for PDF errors. Replace with an inline error component
-- [ ] `ProtectedRoute` returns `null` while loading (blank flash). Show a spinner
+Changes made are documented in [MyChanges.md, Change 2](./MyChanges.md#change-2-fragile-logic-fixes-item-5).
+- [x] `AuthContext`: logout on 401/403 is detected by searching the **error message text**. Make `api.js` throw an error carrying `status`, and check that instead *(`api.js` now throws `ApiError` with `status`; `AuthContext` checks `err.status`; any 401 on an authenticated call logs out centrally)*
+- [x] `Results.jsx`: submission effect depends on `[answers]` and is guarded by a ref, so re-visits and StrictMode behave oddly. Submit on explicit "finish" in `Assessment.jsx`, or key by assessment id *(done by fingerprinting the answers: submits once per distinct complete answer set, and skips if this device or the server already has them)*
+- [x] Failed submission is only `console.warn`ed, so the user never knows it didn't save. Add a visible retry or "not saved" state *(saving / saved / failed + Try again, in English and Kiswahili)*
+- [x] `ProtectedRoute` trusts the mere presence of a token string. Validate against `getMe()` before rendering protected pages, or at least handle expiry gracefully *(waits for session restore, then relies on `isAuthenticated`; expired tokens are logged out and redirected. Cached users still render optimistically while `getMe()` verifies in the background)*
+- [x] `alert()` used for PDF errors. Replace with an inline error component *(inline error in `SummarySheet`; the dead `handleDownloadPdf`/`onDownload` path in `Results.jsx` was removed)*
+- [x] `ProtectedRoute` returns `null` while loading (blank flash). Show a spinner
+- [ ] **TODO:** Kiswahili strings added in this change (`results.sync.*`, `results.pdfError`) need review by a native speaker (see item 8)
+- [ ] **NOTE:** `AssessmentContext` still triggers an `oxlint` `set-state-in-effect` warning (pre-existing). Not touched here
 
 ### 6. Leftovers and cleanup (P2)
 - [ ] Remove `jspdf` from `package.json` if the PDF stays server-generated (it is unused)
@@ -108,11 +111,16 @@ Anyone who knows a girl's name and number can log in and read her health data. U
 - [ ] Accessibility check: keyboard focus on option buttons, colour contrast, screen reader labels on the `CycleRing`
 - [ ] Add analytics/error monitoring that does not capture health answers
 
+### 12. New findings from the item 5 work
+- [ ] **Results page shows a reassuring tier for empty answers** (P0, screening-tool safety). Opening `/results` directly with no or partial answers displays "No strong signs right now", because the scorer treats blanks as "no". Redirect to `/assessment`, or show a "complete the assessment first" state, instead of any tier
+- [ ] `Login.jsx` catches *every* error (including network failures and 5xx) and shows "Invalid credentials". Use `err.status` / `err.isNetworkError` to show an accurate message
+- [ ] `Login.jsx` and `Signup.jsx` show `err.message` straight from the API layer, so network errors appear in English only. Route these messages through i18n (item 8)
+
 ---
 
 ## Suggested order of work
-1. Item 2 (payload mismatch): quick, and data correctness depends on it
-2. Item 5 (fragile logic): small fixes with real user impact
+1. ~~Item 2 (payload mismatch)~~ done
+2. ~~Item 5 (fragile logic)~~ done; do the P0 in item 12 next
 3. Item 3 and 4 (auth and token handling): needs a decision on OTP vs PIN first
 4. Item 7 (clinical review): start early, since it depends on other people
 5. Items 1, 6, 8, 9, then 10 and 11
